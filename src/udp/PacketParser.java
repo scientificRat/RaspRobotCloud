@@ -35,6 +35,7 @@ public class PacketParser extends Thread {
         //'~' connect
         //'d' detach
         //'q' query online device
+        //'j' response json
         try {
             switch (type) {
                 //video frame
@@ -94,7 +95,7 @@ public class PacketParser extends Thread {
                     ArrayList<DeviceInfo> deviceInfoArrayList = services.queryOnlineDevices(userSessionID);
                     Gson gson = new Gson();
                     String sendJson=gson.toJson(deviceInfoArrayList);
-                    byte head='m';
+                    byte head='j';
                     ByteBuffer byteBuffer = ByteBuffer.allocate(sendJson.length()+1);
                     byteBuffer.put(head);
                     byteBuffer.put(sendJson.getBytes());
