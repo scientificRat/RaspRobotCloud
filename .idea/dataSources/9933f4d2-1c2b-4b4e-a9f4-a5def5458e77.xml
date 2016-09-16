@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataSource name="PostgreSQL - rasp_robot_cloud@123.206.21.185">
+  <database-model serializer="dbm" rdbms="POSTGRES" format-version="2.6">
+    <database id="1" name="rasp_robot_cloud">
+      <object-id>16384</object-id>
+      <visible>1</visible>
+    </database>
+    <database id="2" name="postgres">
+      <object-id>12923</object-id>
+    </database>
+    <schema id="3" parent="1" name="public">
+      <object-id>2200</object-id>
+      <visible>1</visible>
+      <introspection-state-number>1890</introspection-state-number>
+      <introspection-timestamp>2016-09-16.12:30:21.685</introspection-timestamp>
+    </schema>
+    <schema id="4" parent="1" name="pg_catalog">
+      <object-id>11</object-id>
+    </schema>
+    <schema id="5" parent="1" name="pg_toast">
+      <object-id>99</object-id>
+    </schema>
+    <schema id="6" parent="1" name="pg_temp_1">
+      <object-id>11194</object-id>
+    </schema>
+    <schema id="7" parent="1" name="pg_toast_temp_1">
+      <object-id>11195</object-id>
+    </schema>
+    <schema id="8" parent="1" name="information_schema">
+      <object-id>12380</object-id>
+    </schema>
+    <table id="9" parent="3" name="users">
+      <object-id>16385</object-id>
+      <state-number>1890</state-number>
+    </table>
+    <column id="10" parent="9" name="username">
+      <state-number>1890</state-number>
+      <mandatory>1</mandatory>
+      <data-type>varchar(32)|0</data-type>
+    </column>
+    <column id="11" parent="9" name="password">
+      <state-number>1890</state-number>
+      <data-type>varchar(32)|0</data-type>
+    </column>
+    <index id="12" parent="9" name="users_pkey">
+      <object-id>16388</object-id>
+      <columns>username</columns>
+      <desc-columns></desc-columns>
+      <unique>1</unique>
+    </index>
+    <key id="13" parent="9" name="users_pkey">
+      <object-id>16389</object-id>
+      <columns>username</columns>
+      <underlying-index>users_pkey</underlying-index>
+      <primary>1</primary>
+    </key>
+  </database-model>
+</dataSource>
