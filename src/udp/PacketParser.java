@@ -6,6 +6,7 @@ import datastruct.dto.DeviceInfo;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
 /**
@@ -92,7 +93,12 @@ public class PacketParser extends Thread {
                     int userSessionID = message[1] + message[2] + message[3] + message[4];
                     ArrayList<DeviceInfo> deviceInfoArrayList = services.queryOnlineDevices(userSessionID);
                     Gson gson = new Gson();
-                    byte[] sendBuffer = gson.toJson(deviceInfoArrayList).getBytes();
+                    String sendJson=gson.toJson(deviceInfoArrayList);
+                    byte head='m';
+                    ByteBuffer byteBuffer = ByteBuffer.allocate(sendJson.length()+1);
+                    byteBuffer.put(head);
+                    byteBuffer.put(sendJson.getBytes());
+                    byte[] sendBuffer = byteBuffer.array();
                     DatagramPacket sendDatagramPacket = new DatagramPacket(sendBuffer,sendBuffer.length,this.datagramPacket.getAddress(),this.datagramPacket.getPort());
                     this.datagramSocket.send(sendDatagramPacket);
                     break;
