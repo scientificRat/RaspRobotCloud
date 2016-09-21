@@ -1,14 +1,19 @@
 package udp;
 
+import dao.RaspDevicesRepository;
+import dao.UsersRepository;
 import datastruct.ForwardingMapping;
 import datastruct.OnlineDevice;
 import datastruct.OnlineUser;
 import datastruct.dto.DeviceInfo;
+import utility.DBHelper;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Vector;
@@ -28,7 +33,7 @@ public class Services {
     //id as index
     private ConcurrentHashMap<Integer, OnlineDevice> onlineDevicesTable = new ConcurrentHashMap<>();
     //sessionId as index
-    private ConcurrentHashMap<Integer, OnlineUser> onlineUserHashTable = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<Integer, OnlineUser> onlineUserTable = new ConcurrentHashMap<>();
     private Vector<ForwardingMapping> forwardingTable = new Vector<>();
 
     public static Services getInstance() {
@@ -41,33 +46,53 @@ public class Services {
 
     //login logout
     //login will return the sessionID
-    public synchronized int deviceLogin(int deviceID, String password, InetAddress inetAddress, int port, String info) {
-        // TODO: 9/16/16 验证密码
-        if (!password.equals("qwerty")) {
-            return -1;
+    public int deviceLogin(int deviceID, String password, InetAddress inetAddress, int port, String info) {
+        //验证密码
+        Connection dbConnection= DBHelper.getDBConnection();
+        RaspDevicesRepository raspDevicesRepository = new RaspDevicesRepository(dbConnection);
+        try {
+            if (!raspDevicesRepository.queryExist(deviceID,password)) {
+                return -1;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return -3;
         }
         //generate sessionID
-        int sessionID = random.nextInt(1000000000);
-        while (onlineDevicesTable.containsKey(sessionID)) {
+        Integer sessionID=-9;
+        synchronized (sessionID){
             sessionID = random.nextInt(1000000000);
+            while (onlineDevicesTable.containsKey(sessionID)) {
+                sessionID = random.nextInt(1000000000);
+            }
+            //insert into table
+            onlineDevicesTable.put(deviceID, new OnlineDevice(sessionID, inetAddress, port, info));
         }
-        //insert into table
-        onlineDevicesTable.put(deviceID, new OnlineDevice(sessionID, inetAddress, port, info));
         return sessionID;
     }
 
-    public synchronized int userLogin(int userID, String password, InetAddress inetAddress, int port, String info) {
-        // TODO: 9/16/16 验证密码
-        if (!password.equals("qwerty")) {
-            return -1;
+    public int userLogin(int userID, String password, InetAddress inetAddress, int port, String info) {
+        //验证密码
+        Connection dbConnection= DBHelper.getDBConnection();
+        UsersRepository usersRepository = new UsersRepository(dbConnection);
+        try {
+            if (!usersRepository.queryExist(userID, password)) {
+                return -1;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return -2;
         }
         //generate sessionID
-        int sessionID = random.nextInt(1000000000);
-        while (onlineUserHashTable.containsKey(sessionID)) {
+        Integer sessionID=-9;
+        synchronized (sessionID){
             sessionID = random.nextInt(1000000000);
+            while (onlineUserTable.containsKey(sessionID)) {
+                sessionID = random.nextInt(1000000000);
+            }
+            //insert into table
+            onlineUserTable.put(sessionID, new OnlineUser(userID, inetAddress, port, info));
         }
-        //insert into table
-        onlineUserHashTable.put(sessionID, new OnlineUser(userID, inetAddress, port, info));
         return sessionID;
     }
 
@@ -77,14 +102,14 @@ public class Services {
     }
 
     public void userLogout(int sessionID) {
-        onlineUserHashTable.remove(sessionID);
+        onlineUserTable.remove(sessionID);
         forwardingTable.removeIf((e) -> e.userSessionID == sessionID);
     }
 
     //query online devices
     public ArrayList<DeviceInfo> queryOnlineDevices(int userSessionID) {
         ArrayList<DeviceInfo> deviceInfoArrayList = new ArrayList<>();
-        OnlineUser onlineUser = onlineUserHashTable.get(userSessionID);
+        OnlineUser onlineUser = onlineUserTable.get(userSessionID);
         if (onlineUser == null) {
             return deviceInfoArrayList;
         }
@@ -98,22 +123,21 @@ public class Services {
         return deviceInfoArrayList;
     }
 
-    //connect device with deviceID
-    public boolean connectDevice(int userSessionID, int deviceID) {
+    //connect device with deviceID and return   [   sessionID   ]   of the device
+    public int connectDevice(int userSessionID, int deviceID) {
         OnlineDevice onlineDevice = onlineDevicesTable.get(deviceID);
-        OnlineUser onlineUser = onlineUserHashTable.get(userSessionID);
+        OnlineUser onlineUser = onlineUserTable.get(userSessionID);
         if (onlineDevice == null || onlineUser == null) {
-            return false;
+            return -1;
         }
-        return forwardingTable.add(
-                new ForwardingMapping(userSessionID, onlineUser.inetAddress, onlineUser.port, onlineDevice.sessionID, onlineDevice.inetAddress, onlineDevice.port)
-        );
+        forwardingTable.add(new ForwardingMapping(userSessionID, onlineUser.inetAddress, onlineUser.port, onlineDevice.sessionID, onlineDevice.inetAddress, onlineDevice.port));
+        return onlineDevice.sessionID;
     }
 
     //detach the device
     public boolean detachDevice(int userSessionID, int deviceID) {
         OnlineDevice onlineDevice = onlineDevicesTable.get(deviceID);
-        OnlineUser onlineUser = onlineUserHashTable.get(userSessionID);
+        OnlineUser onlineUser = onlineUserTable.get(userSessionID);
         if (onlineDevice == null || onlineUser == null) {
             return false;
         }

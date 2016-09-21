@@ -11,8 +11,8 @@
     <schema id="3" parent="1" name="public">
       <object-id>2200</object-id>
       <visible>1</visible>
-      <introspection-state-number>1890</introspection-state-number>
-      <introspection-timestamp>2016-09-16.12:30:21.685</introspection-timestamp>
+      <introspection-state-number>1898</introspection-state-number>
+      <introspection-timestamp>2016-09-20.23:20:18.247</introspection-timestamp>
     </schema>
     <schema id="4" parent="1" name="pg_catalog">
       <object-id>11</object-id>
@@ -29,28 +29,59 @@
     <schema id="8" parent="1" name="information_schema">
       <object-id>12380</object-id>
     </schema>
-    <table id="9" parent="3" name="users">
-      <object-id>16385</object-id>
-      <state-number>1890</state-number>
+    <table id="9" parent="3" name="devices">
+      <object-id>16424</object-id>
+      <state-number>1898</state-number>
     </table>
-    <column id="10" parent="9" name="username">
-      <state-number>1890</state-number>
+    <table id="10" parent="3" name="users">
+      <object-id>16419</object-id>
+      <state-number>1898</state-number>
+    </table>
+    <column id="11" parent="9" name="device_id">
+      <state-number>1898</state-number>
+      <mandatory>1</mandatory>
+      <data-type>integer|0</data-type>
+    </column>
+    <column id="12" parent="9" name="password">
+      <state-number>1898</state-number>
       <mandatory>1</mandatory>
       <data-type>varchar(32)|0</data-type>
     </column>
-    <column id="11" parent="9" name="password">
-      <state-number>1890</state-number>
-      <data-type>varchar(32)|0</data-type>
+    <column id="13" parent="9" name="hardware_description">
+      <state-number>1898</state-number>
+      <data-type>text|0</data-type>
     </column>
-    <index id="12" parent="9" name="users_pkey">
-      <object-id>16388</object-id>
-      <columns>username</columns>
+    <index id="14" parent="9" name="devices_pkey">
+      <object-id>16430</object-id>
+      <columns>device_id</columns>
       <desc-columns></desc-columns>
       <unique>1</unique>
     </index>
-    <key id="13" parent="9" name="users_pkey">
-      <object-id>16389</object-id>
-      <columns>username</columns>
+    <key id="15" parent="9" name="devices_pkey">
+      <object-id>16431</object-id>
+      <columns>device_id</columns>
+      <underlying-index>devices_pkey</underlying-index>
+      <primary>1</primary>
+    </key>
+    <column id="16" parent="10" name="user_id">
+      <state-number>1898</state-number>
+      <mandatory>1</mandatory>
+      <data-type>integer|0</data-type>
+    </column>
+    <column id="17" parent="10" name="password">
+      <state-number>1898</state-number>
+      <mandatory>1</mandatory>
+      <data-type>varchar(32)|0</data-type>
+    </column>
+    <index id="18" parent="10" name="users_pkey">
+      <object-id>16422</object-id>
+      <columns>user_id</columns>
+      <desc-columns></desc-columns>
+      <unique>1</unique>
+    </index>
+    <key id="19" parent="10" name="users_pkey">
+      <object-id>16423</object-id>
+      <columns>user_id</columns>
       <underlying-index>users_pkey</underlying-index>
       <primary>1</primary>
     </key>

@@ -35,7 +35,7 @@ public class PacketParser extends Thread {
         //'~' connect
         //'d' detach
         //'q' query online device
-        //'j' response json
+        //'m' response json
         try {
             switch (type) {
                 //video frame
@@ -81,7 +81,13 @@ public class PacketParser extends Thread {
                 case '~':{
                     int userSessionID = message[1] + message[2] + message[3] + message[4];
                     int deviceID =  message[5] + message[6] + message[7] + message[8];
-                    services.connectDevice(userSessionID,deviceID);
+                    StringBuilder stringBuilder= new StringBuilder();
+                    stringBuilder.append("{DeviceSessionID:");
+                    stringBuilder.append(services.connectDevice(userSessionID,deviceID));
+                    stringBuilder.append('}');
+                    String sendJson = stringBuilder.toString();
+                    byte head='m';
+                    sendJsonDataBack(head,sendJson);
                     break;
                 }
                 case 'd':{
@@ -95,13 +101,8 @@ public class PacketParser extends Thread {
                     ArrayList<DeviceInfo> deviceInfoArrayList = services.queryOnlineDevices(userSessionID);
                     Gson gson = new Gson();
                     String sendJson=gson.toJson(deviceInfoArrayList);
-                    byte head='j';
-                    ByteBuffer byteBuffer = ByteBuffer.allocate(sendJson.length()+1);
-                    byteBuffer.put(head);
-                    byteBuffer.put(sendJson.getBytes());
-                    byte[] sendBuffer = byteBuffer.array();
-                    DatagramPacket sendDatagramPacket = new DatagramPacket(sendBuffer,sendBuffer.length,this.datagramPacket.getAddress(),this.datagramPacket.getPort());
-                    this.datagramSocket.send(sendDatagramPacket);
+                    byte head='m';
+                    sendJsonDataBack(head,sendJson);
                     break;
                 }
             }
@@ -110,12 +111,12 @@ public class PacketParser extends Thread {
         }
     }
 
-    public int byteArrayToInt(byte[] b, int offset) {
-        int value = 0;
-        for (int i = 0; i < 4; i++) {
-            int shift = (4 - 1 - i) * 8;
-            value += (b[i + offset] & 0xFF) << shift;
-        }
-        return value;
+    private void sendJsonDataBack(byte head, String sendJson) throws IOException{
+        ByteBuffer byteBuffer = ByteBuffer.allocate(sendJson.length()+1);
+        byteBuffer.put(head);
+        byteBuffer.put(sendJson.getBytes());
+        byte[] sendBuffer = byteBuffer.array();
+        DatagramPacket sendDatagramPacket = new DatagramPacket(sendBuffer,sendBuffer.length,this.datagramPacket.getAddress(),this.datagramPacket.getPort());
+        this.datagramSocket.send(sendDatagramPacket);
     }
 }
