@@ -3,17 +3,17 @@ package datastruct.dataobj;
 /**
  * Created by huangzhengyue on 9/20/16.
  */
-public class User {
+public class UserInfo {
 
-    private int userID;
+    private String userName;
     private String password;
 
-    public int getUserID() {
-        return userID;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setUserID(int userID) {
-        this.userID = userID;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public String getPassword() {

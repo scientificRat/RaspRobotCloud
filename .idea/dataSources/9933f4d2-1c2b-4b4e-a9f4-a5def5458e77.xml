@@ -11,8 +11,8 @@
     <schema id="3" parent="1" name="public">
       <object-id>2200</object-id>
       <visible>1</visible>
-      <introspection-state-number>1898</introspection-state-number>
-      <introspection-timestamp>2016-09-20.23:20:18.247</introspection-timestamp>
+      <introspection-state-number>1902</introspection-state-number>
+      <introspection-timestamp>2016-09-30.17:59:00.009</introspection-timestamp>
     </schema>
     <schema id="4" parent="1" name="pg_catalog">
       <object-id>11</object-id>
@@ -31,16 +31,16 @@
     </schema>
     <table id="9" parent="3" name="devices">
       <object-id>16424</object-id>
-      <state-number>1898</state-number>
+      <state-number>1902</state-number>
     </table>
     <table id="10" parent="3" name="users">
       <object-id>16419</object-id>
-      <state-number>1898</state-number>
+      <state-number>1901</state-number>
     </table>
     <column id="11" parent="9" name="device_id">
-      <state-number>1898</state-number>
+      <state-number>1902</state-number>
       <mandatory>1</mandatory>
-      <data-type>integer|0</data-type>
+      <data-type>varchar(35)|0</data-type>
     </column>
     <column id="12" parent="9" name="password">
       <state-number>1898</state-number>
@@ -57,31 +57,43 @@
       <desc-columns></desc-columns>
       <unique>1</unique>
     </index>
-    <key id="15" parent="9" name="devices_pkey">
-      <object-id>16431</object-id>
+    <index id="15" parent="9" name="devices_pkey">
+      <object-id>16438</object-id>
+      <columns>device_id</columns>
+      <desc-columns></desc-columns>
+      <unique>1</unique>
+    </index>
+    <key id="16" parent="9" name="devices_pkey">
+      <object-id>16439</object-id>
       <columns>device_id</columns>
       <underlying-index>devices_pkey</underlying-index>
       <primary>1</primary>
     </key>
-    <column id="16" parent="10" name="user_id">
-      <state-number>1898</state-number>
+    <column id="17" parent="10" name="user_name">
+      <state-number>1901</state-number>
       <mandatory>1</mandatory>
-      <data-type>integer|0</data-type>
+      <data-type>varchar(32)|0</data-type>
     </column>
-    <column id="17" parent="10" name="password">
+    <column id="18" parent="10" name="password">
       <state-number>1898</state-number>
       <mandatory>1</mandatory>
       <data-type>varchar(32)|0</data-type>
     </column>
-    <index id="18" parent="10" name="users_pkey">
+    <index id="19" parent="10" name="users_pkey">
       <object-id>16422</object-id>
-      <columns>user_id</columns>
+      <columns>user_name</columns>
       <desc-columns></desc-columns>
       <unique>1</unique>
     </index>
-    <key id="19" parent="10" name="users_pkey">
-      <object-id>16423</object-id>
-      <columns>user_id</columns>
+    <index id="20" parent="10" name="users_pkey">
+      <object-id>16432</object-id>
+      <columns>user_name</columns>
+      <desc-columns></desc-columns>
+      <unique>1</unique>
+    </index>
+    <key id="21" parent="10" name="users_pkey">
+      <object-id>16433</object-id>
+      <columns>user_name</columns>
       <underlying-index>users_pkey</underlying-index>
       <primary>1</primary>
     </key>

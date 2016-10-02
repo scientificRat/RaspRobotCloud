@@ -31,8 +31,8 @@ public class StringValidChecker {
         return false;
     }
 
-//    public static void main(String[] args) {
-//        System.out.println(isUserNameValid("@a###asdadsf"));
-//        System.out.println(isEmailValid("3124123afa@dsf.com"));
-//    }
+    public static void main(String[] args) {
+        System.out.println(isUserNameValid("@a###asdadsf"));
+        System.out.println(isEmailValid("3124123afa@dsf.com"));
+    }
 }

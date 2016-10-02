@@ -8,15 +8,15 @@
 <body>
 <div class="am-container">
     <h1>搜救机器人云端控制台</h1>
-    <a class="am-btn am-btn-danger" onclick="startUDP()">开启UDP服务器</a>
+    <a class="am-btn am-btn-danger" onclick="startUDP()">开启服务器</a>
 </div>
 <script src="assets/js/jquery-3.1.0.min.js"></script>
 <script>
     function startUDP() {
         $.ajax({
             type: 'POST',
-            url: '/servlet/startUDPServer',
-            data: {action: 'start'},
+            url: '/servlet/startServer',
+            data: {action: 'start',devicePort:'8902',userPort:'8901'},
             success: function (feedBack) {
                 if(feedBack.error){
                     alert(feedBack.error);

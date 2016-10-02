@@ -1,20 +1,25 @@
 package datastruct;
 
-import java.net.InetAddress;
+import tcp.TCPConnection;
+
+import java.util.ArrayList;
 
 /**
  * Created by huangzhengyue on 9/16/16.
  */
 public class OnlineDevice {
-    public final int sessionID;
-    public final InetAddress inetAddress;
-    public final int port;
-    public final String info;
+    public final String deviceID;
+    public ArrayList<TCPConnection> forwardingConnections;
 
-    public OnlineDevice(int sessionID, InetAddress inetAddress, int port, String info) {
-        this.sessionID = sessionID;
-        this.inetAddress = inetAddress;
-        this.port = port;
-        this.info = info;
+    public OnlineDevice(String deviceID, ArrayList<TCPConnection> forwardingConnections) {
+        this.deviceID = deviceID;
+        this.forwardingConnections = forwardingConnections;
     }
+
+    public OnlineDevice(String deviceID) {
+        this.deviceID = deviceID;
+        this.forwardingConnections = new ArrayList<>();
+    }
+
+
 }
