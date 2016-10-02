@@ -1,5 +1,6 @@
 package servlet;
 
+import com.google.gson.Gson;
 import server.DeviceServer;
 import server.UserServer;
 import utility.GeneralJsonBuilder;
@@ -24,6 +25,7 @@ public class StartServlet extends HttpServlet {
         resp.setContentType("application/json");
         PrintWriter out=resp.getWriter();
         String action=req.getParameter("action");
+        Gson gson = new Gson();
         if( action == null || action.isEmpty()){
             out.print(GeneralJsonBuilder.error("parameter action is required"));
             return;
@@ -43,6 +45,8 @@ public class StartServlet extends HttpServlet {
             if(deviceServer==null || userServer ==null){
                 deviceServer = new DeviceServer(deviceServerPort);
                 userServer = new UserServer(userServerPort);
+                deviceServer.start();
+                userServer.start();
                 this.getServletContext().setAttribute("DeviceServer",deviceServer);
                 this.getServletContext().setAttribute("UserServer",userServer);
                 out.print(GeneralJsonBuilder.succuss(true));

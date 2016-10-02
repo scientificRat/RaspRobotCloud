@@ -54,7 +54,9 @@ public class UserConnection extends TCPConnection {
                     }
                     //do login
                     try {
-                        services.userLogin(loginName,password);
+                        String sessionID=services.userLogin(loginName,password);
+                        sendStringData("{\"sessionID\":\""+sessionID+"\"}");
+
                     } catch (TCPServicesException e) {
                         e.printStackTrace();
                         sendStringData(GeneralJsonBuilder.error(e.toString()));

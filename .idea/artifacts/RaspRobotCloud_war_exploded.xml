@@ -7,6 +7,10 @@
         <element id="directory" name="classes">
           <element id="module-output" name="RaspRobotCloud" />
         </element>
+        <element id="directory" name="lib">
+          <element id="library" level="project" name="com.google.code.gson:gson:2.7" />
+          <element id="file-copy" path="$PROJECT_DIR$/web/WEB-INF/lib/postgresql-9.4.1208.jar" />
+        </element>
       </element>
     </root>
   </artifact>

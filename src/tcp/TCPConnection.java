@@ -102,7 +102,7 @@ public abstract class TCPConnection extends Thread {
         byte[] strDataBytes  = data.getBytes();
         byte[] sendData = new byte[5 + strDataBytes.length];
         sendData[0] = 'm';
-        intToByteArray(data.length() + 1, sendData, 1);
+        intToByteArray(strDataBytes.length, sendData, 1);
         for (int i = 0; i < strDataBytes.length; i++) {
             sendData[i+5] = strDataBytes[i];
         }
