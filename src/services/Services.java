@@ -132,7 +132,7 @@ public class Services {
      *
      * */
     //query online devices
-    public ArrayList<DeviceInfo> queryOnlineDevices(int userSessionID) {
+    public ArrayList<DeviceInfo> queryOnlineDevices(String userSessionID) {
         ArrayList<DeviceInfo> deviceInfoArrayList = new ArrayList<>();
         OnlineUser onlineUser = onlineUserTable.get(userSessionID);
         if (onlineUser == null) {
@@ -172,10 +172,10 @@ public class Services {
             //加入两个转发表
             onlineDevice.forwardingConnections.add(userConnection);
             connectionForwardingTable.put(userConnection,new ForwardingTableCols(deviceConnection,userSessionID));
-
         }catch (NullPointerException e){
             throw new TCPServicesException("device not online (null pointer exception)\n"+e.toString());
         }
+        deviceConnection.sendStringData("{\"action\":\"startVideo\"}");
     }
     /***********
      *

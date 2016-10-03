@@ -80,7 +80,6 @@ public class UserConnection extends TCPConnection {
                         e.printStackTrace();
                         sendStringData(GeneralJsonBuilder.error(e.toString()));
                     }
-
                 }
                 else if("detach".equals(type)){
                     String sessionID= request.getSessionID();
@@ -101,6 +100,16 @@ public class UserConnection extends TCPConnection {
                     }
                     this.needCloseAfterParsing = true;
                 }
+                else if("query".equals(type)){
+                    String sessionID= request.getSessionID();
+                    if(sessionID==null||sessionID.isEmpty()){
+                        sendStringData(GeneralJsonBuilder.error("parameter sessionID is required"));
+                        return;
+                    }
+                    //返回在线设备列表
+                    sendStringData(gson.toJson(Services.getInstance().queryOnlineDevices(sessionID)));
+                    this.needCloseAfterParsing = true;
+                }
                 break;
             }
             case 'c':{
@@ -114,7 +123,6 @@ public class UserConnection extends TCPConnection {
             }
         }
     }
-
 
     @Override
     protected void doBeforeThreadEnd() {
