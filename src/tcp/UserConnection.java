@@ -23,7 +23,7 @@ public class UserConnection extends TCPConnection {
                 Request request=gson.fromJson(strData, Request.class);
                 String type =request.getRequestType();
                 if(type == null || type.isEmpty()){
-                    sendStringData(GeneralJsonBuilder.error("parameter type is required"));
+                    sendStringData(GeneralJsonBuilder.error("parameter requestType is required,[login/logout/detach/connect]"));
                     return;
                 }
                 if("logout".equals(type)){
@@ -106,6 +106,10 @@ public class UserConnection extends TCPConnection {
             case 'c':{
                 // 转发命令
                 services.userToDeviceForwarding(this,dataHead,data);
+                break;
+            }
+            default:{
+                sendStringData(GeneralJsonBuilder.error("undefined head type"));
                 break;
             }
         }

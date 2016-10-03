@@ -50,7 +50,7 @@ public abstract class TCPConnection extends Thread {
                     }
                     head[i] = (byte) c;
                 }
-                int dataLength = head[1] + head[2] + head[3] + head[4];
+                int dataLength = byteToInt(head, 1);
                 byte[] data = new byte[dataLength];
                 for (int i = 0; i < dataLength; i++) {
                     int c = inputStream.read();
@@ -99,23 +99,34 @@ public abstract class TCPConnection extends Thread {
 
 
     public void sendStringData(String data) {
-        byte[] strDataBytes  = data.getBytes();
+        byte[] strDataBytes = data.getBytes();
         byte[] sendData = new byte[5 + strDataBytes.length];
         sendData[0] = 'm';
         intToByteArray(strDataBytes.length, sendData, 1);
         for (int i = 0; i < strDataBytes.length; i++) {
-            sendData[i+5] = strDataBytes[i];
+            sendData[i + 5] = strDataBytes[i];
         }
         sendMessage(sendData);
     }
 
-    private void intToByteArray(int i, byte[] buffer, int offset) {
-        //由高位到低位
-        buffer[offset] = (byte) ((i >> 24) & 0xFF);
-        buffer[offset + 1] = (byte) ((i >> 16) & 0xFF);
-        buffer[offset + 2] = (byte) ((i >> 8) & 0xFF);
-        buffer[offset + 3] = (byte) (i & 0xFF);
+    private void intToByteArray(int integer, byte[] buffer, int offset) {
+        //(小端序)
+        buffer[offset] = (byte) (integer & 0xFF);
+        buffer[offset + 1] = (byte) ((integer >> 8) & 0xFF);
+        buffer[offset + 2] = (byte) ((integer >> 16) & 0xFF);
+        buffer[offset + 3] = (byte) ((integer >> 24) & 0xFF);
     }
 
+    private int byteToInt(byte[] b, int offset) {
+        //小端序
+        int temp;
+        int n = 0;
+        for (int i = offset + 3; i >= offset; i--) {
+            n <<= 8;
+            temp = b[i] & 0xff;
+            n |= temp;
+        }
+        return n;
+    }
 
 }
