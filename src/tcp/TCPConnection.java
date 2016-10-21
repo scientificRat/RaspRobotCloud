@@ -1,5 +1,7 @@
 package tcp;
 
+import utility.GeneralJsonBuilder;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -17,6 +19,8 @@ public abstract class TCPConnection extends Thread {
     private InputStream inputStream = null;
 
     private OutputStream outputStream = null;
+
+    protected boolean needCloseAfterParsing = false;
 
     public TCPConnection() {
     }
@@ -50,6 +54,8 @@ public abstract class TCPConnection extends Thread {
                     }
                     head[i] = (byte) c;
                 }
+                //读到头部，开始设定超时，每个byte必须在0。5s内传完
+                this.socket.setSoTimeout(500);
                 int dataLength = byteToInt(head, 1);
                 byte[] data = new byte[dataLength];
                 for (int i = 0; i < dataLength; i++) {
@@ -60,10 +66,15 @@ public abstract class TCPConnection extends Thread {
                     }
                     data[i] = (byte) c;
                 }
+                this.socket.setSoTimeout(0);
                 parseMessage(head, data);
+                if(needCloseAfterParsing){
+                    this.connected = false;
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
+            sendStringData(GeneralJsonBuilder.error("error! "+e.toString()));
         } finally {
             doBeforeThreadEnd();
             try {
@@ -89,14 +100,44 @@ public abstract class TCPConnection extends Thread {
         }
     }
 
-    public synchronized void sendMessage(byte[] data) {
+    protected synchronized void sendRawData(byte[] data) {
         try {
             outputStream.write(data);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+    protected synchronized void sendRawData(byte[] data,int offset,int length) {
+        try {
+            outputStream.write(data,offset,length);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
+    //不同连接应用层协议可能不同，因此需要实现此方法
+    public abstract void sendMessage(byte[] data);
+
+
+    protected void intToByteArray(int integer, byte[] buffer, int offset) {
+        //(小端序)
+        buffer[offset] = (byte) (integer & 0xFF);
+        buffer[offset + 1] = (byte) ((integer >> 8) & 0xFF);
+        buffer[offset + 2] = (byte) ((integer >> 16) & 0xFF);
+        buffer[offset + 3] = (byte) ((integer >> 24) & 0xFF);
+    }
+
+    protected int byteToInt(byte[] b, int offset) {
+        //小端序
+        int temp;
+        int n = 0;
+        for (int i = offset + 3; i >= offset; i--) {
+            n <<= 8;
+            temp = b[i] & 0xff;
+            n |= temp;
+        }
+        return n;
+    }
 
     public void sendStringData(String data) {
         byte[] strDataBytes = data.getBytes();
@@ -107,26 +148,6 @@ public abstract class TCPConnection extends Thread {
             sendData[i + 5] = strDataBytes[i];
         }
         sendMessage(sendData);
-    }
-
-    private void intToByteArray(int integer, byte[] buffer, int offset) {
-        //(小端序)
-        buffer[offset] = (byte) (integer & 0xFF);
-        buffer[offset + 1] = (byte) ((integer >> 8) & 0xFF);
-        buffer[offset + 2] = (byte) ((integer >> 16) & 0xFF);
-        buffer[offset + 3] = (byte) ((integer >> 24) & 0xFF);
-    }
-
-    private int byteToInt(byte[] b, int offset) {
-        //小端序
-        int temp;
-        int n = 0;
-        for (int i = offset + 3; i >= offset; i--) {
-            n <<= 8;
-            temp = b[i] & 0xff;
-            n |= temp;
-        }
-        return n;
     }
 
 }

@@ -9,6 +9,7 @@ public class Request {
     private String requestType;
     private String sessionID;
     private String connectingID;
+    private String debug;
 
     public String getLoginName() {
         return loginName;
@@ -48,5 +49,13 @@ public class Request {
 
     public void setConnectingID(String connectingID) {
         this.connectingID = connectingID;
+    }
+
+    public String getDebug() {
+        return debug;
+    }
+
+    public void setDebug(String debug) {
+        this.debug = debug;
     }
 }

@@ -14,6 +14,7 @@ public class DeviceConnection extends TCPConnection {
     protected void parseMessage(byte[] dataHead,byte[] data){
         switch (dataHead[0]){
             case 'r':{
+                this.needCloseAfterParsing = true;
                 String strData = new String(data);
                 Gson gson = new Gson();
                 Request request=gson.fromJson(strData, Request.class);
@@ -37,6 +38,8 @@ public class DeviceConnection extends TCPConnection {
                     //do login
                     try {
                         Services.getInstance().deviceLogin(loginName,password,this);
+                        sendStringData(GeneralJsonBuilder.succuss(true));
+                        this.needCloseAfterParsing = false;
                     } catch (TCPServicesException e) {
                         e.printStackTrace();
                         sendStringData(GeneralJsonBuilder.error(e.toString()));
@@ -59,6 +62,7 @@ public class DeviceConnection extends TCPConnection {
             }
             default:{
                 sendStringData(GeneralJsonBuilder.error("undefined head type"));
+                this.needCloseAfterParsing = true;
                 break;
             }
         }
@@ -72,4 +76,12 @@ public class DeviceConnection extends TCPConnection {
             sendStringData(GeneralJsonBuilder.error(e.toString()));
         }
     }
+
+    @Override
+    public void sendMessage(byte[] data) {
+        sendRawData(data);
+    }
+
+
+
 }

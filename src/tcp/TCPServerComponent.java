@@ -17,6 +17,8 @@ public class TCPServerComponent {
 
     boolean started = false;
 
+    protected boolean  needCloseAfterParsiong =false;
+
     public TCPServerComponent(int port, Class connectionType) {
         this.port = port;
         this.connectionType = connectionType;

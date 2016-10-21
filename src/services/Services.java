@@ -3,7 +3,7 @@ package services;
 import dao.RaspDevicesRepository;
 import dao.UsersRepository;
 import datastruct.ForwardingTableCols;
-import datastruct.OnlineDevice;
+import datastruct.OnlineDeviceInfo;
 import datastruct.OnlineUser;
 import datastruct.dataobj.DeviceInfo;
 import exceptions.TCPServicesException;
@@ -13,6 +13,7 @@ import tcp.UserConnection;
 import utility.DBHelper;
 import utility.UniqueIdGenerator;
 
+import java.io.*;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -26,12 +27,12 @@ public class Services {
     //singleton
     private static Services ourInstance = new Services();
 
-    //在线设备表
-    private ConcurrentHashMap<DeviceConnection, OnlineDevice> onlineDevicesTable = new ConcurrentHashMap<>();
+    //在线设备信息表
+    private ConcurrentHashMap<DeviceConnection, OnlineDeviceInfo> onlineDevicesTable = new ConcurrentHashMap<>();
     //在线用户表 sessionID as index
     private ConcurrentHashMap<String, OnlineUser> onlineUserTable = new ConcurrentHashMap<>();
     //用户--设备连接转发表
-    private ConcurrentHashMap<UserConnection, ForwardingTableCols> connectionForwardingTable = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<UserConnection, ForwardingTableCols> userConnectionForwardingTable = new ConcurrentHashMap<>();
 
     public static Services getInstance() {
         return ourInstance;
@@ -62,7 +63,7 @@ public class Services {
             throw new TCPServicesException("deviceID or password error");
         }
         //插入在线设备表
-        onlineDevicesTable.put(deviceConnection,new OnlineDevice(deviceID));
+        onlineDevicesTable.put(deviceConnection,new OnlineDeviceInfo(deviceID));
     }
     /****************************
      *
@@ -98,10 +99,10 @@ public class Services {
     public void deviceLogout(DeviceConnection deviceConnection) throws TCPServicesException{
         try {
             //如果设备已连用户端接则断开用户连接
-            ArrayList<TCPConnection> connectionArrayList=onlineDevicesTable.get(deviceConnection).forwardingConnections;
+            ArrayList<UserConnection> connectionArrayList=onlineDevicesTable.get(deviceConnection).forwardingConnections;
             connectionArrayList.forEach(k->{
                 k.closeConnection();
-                connectionForwardingTable.remove(k);
+                userConnectionForwardingTable.remove(k);
             });
             onlineDevicesTable.remove(deviceConnection);
         }catch (NullPointerException e){
@@ -117,9 +118,9 @@ public class Services {
     public void userLogout(String sessionID) throws TCPServicesException{
         try {
             onlineUserTable.remove(sessionID);
-            connectionForwardingTable.forEach((k,v)->{
+            userConnectionForwardingTable.forEach((k, v)->{
                 if(v.userSessionID.equals(sessionID)){
-                    connectionForwardingTable.remove(k);
+                    userConnectionForwardingTable.remove(k);
                 }
             });
         }catch (NullPointerException e){
@@ -146,6 +147,7 @@ public class Services {
 
         return deviceInfoArrayList;
     }
+
     /***********
      *
      *   请求连接设备
@@ -156,7 +158,7 @@ public class Services {
         if(!onlineUserTable.containsKey(userSessionID)){
             throw new TCPServicesException("user not login");
         }
-        OnlineDevice onlineDevice =null;
+        OnlineDeviceInfo onlineDevice =null;
         DeviceConnection deviceConnection = null;
         for (DeviceConnection connection: onlineDevicesTable.keySet()) {
             if(onlineDevicesTable.get(connection).deviceID.equals(deviceID)){
@@ -171,10 +173,11 @@ public class Services {
         try{
             //加入两个转发表
             onlineDevice.forwardingConnections.add(userConnection);
-            connectionForwardingTable.put(userConnection,new ForwardingTableCols(deviceConnection,userSessionID));
+            userConnectionForwardingTable.put(userConnection,new ForwardingTableCols(deviceConnection,userSessionID));
         }catch (NullPointerException e){
             throw new TCPServicesException("device not online (null pointer exception)\n"+e.toString());
         }
+        //告知设备发送视频
         deviceConnection.sendStringData("{\"action\":\"startVideo\"}");
     }
     /***********
@@ -188,7 +191,7 @@ public class Services {
         if(!onlineUserTable.containsKey(userSessionID)){
             throw new TCPServicesException("user not login");
         }
-        OnlineDevice onlineDevice =null;
+        OnlineDeviceInfo onlineDevice =null;
         for (DeviceConnection connection: onlineDevicesTable.keySet()) {
             if(onlineDevicesTable.get(connection).deviceID.equals(deviceID)){
                 onlineDevice = onlineDevicesTable.get(connection);
@@ -200,7 +203,7 @@ public class Services {
         }
         try {
             onlineDevice.forwardingConnections.remove(userConnection);
-            connectionForwardingTable.remove(userConnection);
+            userConnectionForwardingTable.remove(userConnection);
         }catch (NullPointerException e){
             throw new TCPServicesException(e.toString());
         }
@@ -212,7 +215,7 @@ public class Services {
      * */
 
     public void userToDeviceForwarding(UserConnection userConnection,byte[] head,byte[] data){
-        TCPConnection destinationConnection = connectionForwardingTable.get(userConnection).forwardingToConnection;
+        TCPConnection destinationConnection = userConnectionForwardingTable.get(userConnection).forwardingToConnection;
         byte[] sendData = new byte[head.length+data.length];
         System.arraycopy(head,0,sendData,0,head.length);
         System.arraycopy(data,0,sendData,head.length,data.length);
@@ -228,10 +231,28 @@ public class Services {
         byte[] sendData = new byte[head.length+data.length];
         System.arraycopy(head,0,sendData,0,head.length);
         System.arraycopy(data,0,sendData,head.length,data.length);
-        ArrayList<TCPConnection> destinationConnectionArrayList = onlineDevicesTable.get(deviceConnection).forwardingConnections;
+        ArrayList<UserConnection> destinationConnectionArrayList = onlineDevicesTable.get(deviceConnection).forwardingConnections;
         destinationConnectionArrayList.forEach(connection->{
             connection.sendMessage(sendData);
         });
     }
+
+
+    /**
+     *
+     * HTTP--------相关------
+     *
+     */
+
+    /**
+     *  转发到通过http访问的用户
+     */
+
+    public void deviceToHttpForwarding(DeviceConnection deviceConnection,byte[] head,byte[] data){
+
+    }
+
+
+
 
 }
