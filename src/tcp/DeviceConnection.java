@@ -9,7 +9,7 @@ import utility.GeneralJsonBuilder;
 /**
  * Created by huangzhengyue on 27/09/2016.
  */
-public class DeviceConnection extends TCPConnection {
+public class DeviceConnection extends SelfDefinedProtocolConnection {
 
     protected void parseMessage(byte[] dataHead,byte[] data){
         switch (dataHead[0]){
@@ -78,10 +78,8 @@ public class DeviceConnection extends TCPConnection {
     }
 
     @Override
-    public void sendMessage(byte[] data) {
+    public void sendForwardingData(byte[] data) {
+        //直接将需要转发的数据原封不动发给小车设备
         sendRawData(data);
     }
-
-
-
 }

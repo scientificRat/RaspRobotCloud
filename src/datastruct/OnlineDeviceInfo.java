@@ -1,7 +1,7 @@
 package datastruct;
 
-import tcp.TCPConnection;
 import tcp.UserConnection;
+import tcp.UserNonBrowserClientConnection;
 
 import java.util.ArrayList;
 
@@ -33,5 +33,4 @@ public class OnlineDeviceInfo {
     public void setForwardingConnections(ArrayList<UserConnection> forwardingConnections) {
         this.forwardingConnections = forwardingConnections;
     }
-
 }

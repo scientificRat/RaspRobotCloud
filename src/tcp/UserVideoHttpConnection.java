@@ -7,7 +7,7 @@ import java.io.OutputStream;
 /**
  * Created by huangzhengyue on 2016/10/15.
  */
-public class UserHttpConnection extends UserConnection {
+public class UserVideoHttpConnection extends TCPConnection implements UserConnection {
 
     private final String BOUNDARY = "boundarydonotcross";
     private final String STD_HEADER = "Connection: close\r\n" +
@@ -15,16 +15,6 @@ public class UserHttpConnection extends UserConnection {
             "Cache-Control: no-store, no-cache, must-revalidate, pre-check=0, post-check=0, max-age=0\r\n" +
             "Pragma: no-cache\r\n" +
             "Expires: Mon, 3 Jan 2000 12:34:56 GMT\r\n";
-
-    @Override
-    protected void parseMessage(byte[] dataHead, byte[] data) {
-        // FIXME: 2016/10/15
-    }
-
-    @Override
-    protected void doBeforeThreadEnd() {
-        // FIXME: 2016/10/15
-    }
 
     @Override
     public void run() {
@@ -70,7 +60,12 @@ public class UserHttpConnection extends UserConnection {
     }
 
     @Override
-    public void sendMessage(byte[] data) {
-        // TODO: 2016/10/15
+    public void sendVideoStream(byte[] image, int length) {
+
+    }
+
+    @Override
+    public void sendForwardingData(byte[] data) {
+
     }
 }

@@ -1,5 +1,6 @@
 package services;
 
+import com.sun.tools.internal.xjc.reader.xmlschema.bindinfo.BIConversion;
 import dao.RaspDevicesRepository;
 import dao.UsersRepository;
 import datastruct.ForwardingTableCols;
@@ -10,10 +11,10 @@ import exceptions.TCPServicesException;
 import tcp.DeviceConnection;
 import tcp.TCPConnection;
 import tcp.UserConnection;
+import tcp.UserNonBrowserClientConnection;
 import utility.DBHelper;
 import utility.UniqueIdGenerator;
 
-import java.io.*;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -127,11 +128,12 @@ public class Services {
             throw new TCPServicesException("no such user(null pointer)\n"+e.toString());
         }
     }
-    /***********
-     *
-     *   查询在线设备列表
-     *
-     * */
+
+    /**
+     * 查询在线设备列表
+     * @param userSessionID 用户session id
+     * @return 设备信息列表
+     */
     //query online devices
     public ArrayList<DeviceInfo> queryOnlineDevices(String userSessionID) {
         ArrayList<DeviceInfo> deviceInfoArrayList = new ArrayList<>();
@@ -148,12 +150,15 @@ public class Services {
         return deviceInfoArrayList;
     }
 
-    /***********
-     *
-     *   请求连接设备
-     *
-     * */
-    public void connectDevice(String userSessionID, String deviceID, UserConnection userConnection) throws TCPServicesException{
+
+    /**
+     * 请求连接设备
+     * @param userSessionID
+     * @param deviceID
+     * @param userConnection
+     * @throws TCPServicesException
+     */
+    public void connectDevice(String userSessionID, String deviceID, UserNonBrowserClientConnection userConnection) throws TCPServicesException{
         //check online
         if(!onlineUserTable.containsKey(userSessionID)){
             throw new TCPServicesException("user not login");
@@ -180,13 +185,16 @@ public class Services {
         //告知设备发送视频
         deviceConnection.sendStringData("{\"action\":\"startVideo\"}");
     }
-    /***********
-     *
-     *   断开用户设备连接
-     *
-     * */
+
+    /**
+     * 断开用户设备连接
+     * @param userSessionID
+     * @param deviceID
+     * @param userConnection
+     * @throws TCPServicesException
+     */
     //detach the device
-    public void detachDevice(String userSessionID,String deviceID,UserConnection userConnection) throws TCPServicesException {
+    public void detachDevice(String userSessionID, String deviceID, UserNonBrowserClientConnection userConnection) throws TCPServicesException {
         //check online
         if(!onlineUserTable.containsKey(userSessionID)){
             throw new TCPServicesException("user not login");
@@ -214,45 +222,26 @@ public class Services {
      *    转发   用户--->设备
      * */
 
-    public void userToDeviceForwarding(UserConnection userConnection,byte[] head,byte[] data){
+    public void userToDeviceForwarding(UserNonBrowserClientConnection userConnection, byte[] head, byte[] data){
         TCPConnection destinationConnection = userConnectionForwardingTable.get(userConnection).forwardingToConnection;
         byte[] sendData = new byte[head.length+data.length];
         System.arraycopy(head,0,sendData,0,head.length);
         System.arraycopy(data,0,sendData,head.length,data.length);
-        destinationConnection.sendMessage(sendData);
+        destinationConnection.sendForwardingData(sendData);
     }
 
     /***************
      *
      *    转发   设备--->用户
      * */
-
     public void deviceToUserForwarding(DeviceConnection deviceConnection,byte[] head,byte[] data){
         byte[] sendData = new byte[head.length+data.length];
         System.arraycopy(head,0,sendData,0,head.length);
         System.arraycopy(data,0,sendData,head.length,data.length);
         ArrayList<UserConnection> destinationConnectionArrayList = onlineDevicesTable.get(deviceConnection).forwardingConnections;
         destinationConnectionArrayList.forEach(connection->{
-            connection.sendMessage(sendData);
+            connection.sendForwardingData(sendData);
         });
     }
-
-
-    /**
-     *
-     * HTTP--------相关------
-     *
-     */
-
-    /**
-     *  转发到通过http访问的用户
-     */
-
-    public void deviceToHttpForwarding(DeviceConnection deviceConnection,byte[] head,byte[] data){
-
-    }
-
-
-
 
 }
