@@ -9,4 +9,9 @@ public class OnlineUser {
     public OnlineUser(String userName) {
         this.userName = userName;
     }
+
+    public String getUserName() {
+        return userName;
+    }
+
 }

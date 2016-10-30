@@ -30,7 +30,7 @@ public abstract class SelfDefinedProtocolConnection extends TCPConnection {
                     }
                     head[i] = (byte) c;
                 }
-                //读到头部，开始设定超时，每个byte必须在0。5s内传完
+                //读到头部，开始设定超时，每个byte必须在0.5s内传完
                 this.socket.setSoTimeout(500);
                 int dataLength = byteToInt(head, 1);
                 byte[] data = new byte[dataLength];
@@ -53,11 +53,6 @@ public abstract class SelfDefinedProtocolConnection extends TCPConnection {
             sendStringData(GeneralJsonBuilder.error("error! " + e.toString()));
         } finally {
             doBeforeThreadEnd();
-            try {
-                inputStream.close();
-            } catch (IOException | NullPointerException e) {
-                e.printStackTrace();
-            }
             try {
                 socket.close();
             } catch (IOException e) {

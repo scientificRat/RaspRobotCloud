@@ -19,6 +19,11 @@ import java.util.ArrayList;
  */
 public class UserNonBrowserClientConnection extends SelfDefinedProtocolConnection implements UserConnection {
 
+    private String mSessionID=null;
+
+    public String getSessionID() {
+        return this.mSessionID;
+    }
 
     @Override
     protected void parseMessage(byte[] dataHead, byte[] data) {
@@ -37,13 +42,14 @@ public class UserNonBrowserClientConnection extends SelfDefinedProtocolConnectio
 
                 String type = request.getRequestType();
                 if (type == null || type.isEmpty()) {
-                    sendStringData(GeneralJsonBuilder.error("parameter requestType is required,[login/logout/detach/connect]"));
+                    sendStringData(GeneralJsonBuilder.error("parameter requestType is required,[login/logout/detach/connect/query]"));
                     return;
                 }
+                // 默认返回信息后关闭连接
                 this.needCloseAfterParsing = true;
-
                 if ("logout".equals(type)) {
                     String sessionID = request.getSessionID();
+                    this.mSessionID = sessionID;
                     if (sessionID == null || sessionID.isEmpty()) {
                         sendStringData(GeneralJsonBuilder.error("parameter sessionID is required"));
                         return;
@@ -76,8 +82,9 @@ public class UserNonBrowserClientConnection extends SelfDefinedProtocolConnectio
                         sendStringData(GeneralJsonBuilder.error(e.toString()));
                     }
 
-                } else if ("connection".equals((type))) {
+                } else if ("connect".equals((type))) {
                     String sessionID = request.getSessionID();
+                    this.mSessionID = sessionID;
                     if (sessionID == null || sessionID.isEmpty()) {
                         sendStringData(GeneralJsonBuilder.error("parameter sessionID is required"));
                         return;
@@ -114,6 +121,7 @@ public class UserNonBrowserClientConnection extends SelfDefinedProtocolConnectio
                     }
                 } else if ("detach".equals(type)) {
                     String sessionID = request.getSessionID();
+                    this.mSessionID =sessionID;
                     if (sessionID == null || sessionID.isEmpty()) {
                         sendStringData(GeneralJsonBuilder.error("parameter sessionID is required"));
                         return;
@@ -131,6 +139,7 @@ public class UserNonBrowserClientConnection extends SelfDefinedProtocolConnectio
                     }
                 } else if ("query".equals(type)) {
                     String sessionID = request.getSessionID();
+                    this.mSessionID =sessionID;
                     if (sessionID == null || sessionID.isEmpty()) {
                         sendStringData(GeneralJsonBuilder.error("parameter sessionID is required"));
                         return;
@@ -152,7 +161,7 @@ public class UserNonBrowserClientConnection extends SelfDefinedProtocolConnectio
                     //返回在线设备列表
                     sendStringData(gson.toJson(Services.getInstance().queryOnlineDevices(sessionID)));
                 } else {
-                    sendStringData(GeneralJsonBuilder.error("You are silly B, parameter requestType is required,[login/logout/detach/connect]"));
+                    sendStringData(GeneralJsonBuilder.error("You are silly B, parameter requestType is required,[login/logout/detach/connect/query]"));
                 }
                 break;
             }
@@ -171,7 +180,7 @@ public class UserNonBrowserClientConnection extends SelfDefinedProtocolConnectio
 
     //debug only
     public void sendDebugImageData(byte[] image,int len){
-        sendVideoStream(image,len);
+        sendVideoStream(image,0,len);
     }
 
     @Override
@@ -182,13 +191,11 @@ public class UserNonBrowserClientConnection extends SelfDefinedProtocolConnectio
     }
 
     @Override
-    public void sendVideoStream(byte[] image, int length) {
+    public void sendVideoStream(byte[] data,int imageOffset, int length) {
         byte[] sendData = new byte[5 + length];
         sendData[0] = 'v';
         intToByteArray(length, sendData, 1);
-        for (int i = 0; i < length; i++) {
-            sendData[i + 5] = image[i];
-        }
+        System.arraycopy(data,imageOffset,sendData,5,length);
         sendRawData(sendData);
     }
 

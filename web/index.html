@@ -2,34 +2,56 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>搜救机器人云端控制台</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>登录</title>
     <link rel="stylesheet" href="assets/css/amazeui.min.css">
+    <link rel="stylesheet" href="assets/css/main.css">
 </head>
-<body>
-<div class="am-container">
-    <h1>搜救机器人云端控制台</h1>
-    <a class="am-btn am-btn-danger" onclick="startUDP()">开启服务器</a>
+<body class="colorfulBack">
+<div class="am-vertical-align" style="height: 100vh; text-align: center">
+    <div class="login-main am-vertical-align-middle">
+        <div class="top_container mid_item">
+            <h1><a href="launchServer.html" style="color: #636368" class="am-animation-fade">搜救机器人平台</a></h1>
+            <p class="am-animation-fade">-基于树莓派-</p>
+        </div>
+        <div class="am-container am-text-left">
+            <form method="post">
+                <div class="am-g am-margin-top-xs">
+                    <label class="am-u-sm-3">用户名</label>
+                    <div class="am-u-sm-9"><input id="loginName" type="text"></div>
+                </div>
+                <div class="am-g am-margin-top-xs">
+                    <label class="am-u-sm-3">密码</label>
+                    <div class="am-u-sm-9"><input id="password" type="password"></div>
+                </div>
+                <div class="am-g am-margin-top-xs">
+                    <label class="am-u-sm-3">验证码</label>
+                    <div class="am-u-sm-3 am-padding-right-0"><input id="verifyingCode" type="text"></div>
+                    <div class="am-u-sm-3 am-padding-right-0"><img id="verifyImage" src="/servlet/authImage"></div>
+                    <div class="am-u-sm-3"><a id="change" class="blue_text_link">看不清</a></div>
+                </div>
+                <div class="am-g am-margin-top-lg">
+                    <div class="am-container">
+                        <a id="login-button" class="submit-button">登陆</a>
+                    </div>
+                </div>
+                <div class="am-g">
+                    <div class="am-u-sm-6">
+                        <a id="forget_password" class="normal_text_link" href="resetPassword.html">忘记密码</a>
+                    </div>
+                    <div class="am-u-sm-6 am-text-right">
+                        <a id="signup.html" class="normal_text_link">立即注册</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
-<script src="assets/js/jquery-3.1.0.min.js"></script>
-<script>
-    function startUDP() {
-        $.ajax({
-            type: 'POST',
-            url: '/servlet/startServer',
-            data: {action: 'start',devicePort:'8902',userPort:'8901'},
-            success: function (feedBack) {
-                if(feedBack.error){
-                    alert(feedBack.error);
-                }
-                if(feedBack.success){
-                    alert("开启成功！");
-                }
-            },
-            error: function () {
-                alert("网络连接不佳！");
-            }
-        });
-    }
-</script>
+
+<script src="assets/js/lib/jquery-3.1.0.min.js"></script>
+<script src="assets/js/lib/common.js"></script>
+<script src="assets/js/login.js"></script>
 </body>
 </html>

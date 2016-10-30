@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import server.TCPServer;
 import tcp.DeviceConnection;
 import tcp.UserNonBrowserClientConnection;
+import tcp.UserVideoHttpConnection;
 import utility.GeneralJsonBuilder;
 
 import javax.servlet.ServletException;
@@ -42,18 +43,24 @@ public class StartServlet extends HttpServlet {
                 return;
             }
             // find the servers in context
+
             TCPServer deviceServer = (TCPServer) this.getServletContext().getAttribute("DeviceServer");
             TCPServer userServer = (TCPServer) this.getServletContext().getAttribute("UserServer");
-            if (deviceServer == null || userServer == null) {
+            TCPServer videoServer = (TCPServer) this.getServletContext().getAttribute("VideoHttpServer");
+
+            if (deviceServer == null || userServer == null || videoServer == null) {
                 // create new Server
                 deviceServer = new TCPServer(deviceServerPort, DeviceConnection.class);
                 userServer = new TCPServer(userServerPort, UserNonBrowserClientConnection.class);
+                videoServer = new TCPServer(8999, UserVideoHttpConnection.class);
                 deviceServer.start();
                 userServer.start();
+                videoServer.start();
                 this.getServletContext().setAttribute("DeviceServer", deviceServer);
                 this.getServletContext().setAttribute("UserServer", userServer);
+                this.getServletContext().setAttribute("VideoHttpServer", videoServer);
                 out.print(GeneralJsonBuilder.succuss(true));
-            } else if (deviceServer != null && userServer != null) {
+            } else if (deviceServer != null && userServer != null && videoServer != null) {
                 out.print(GeneralJsonBuilder.error("已经开启，不能再次开启"));
             } else {
                 out.print(GeneralJsonBuilder.error("fatal error detected!! 请重启服务器"));

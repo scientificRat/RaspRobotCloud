@@ -1,0 +1,723 @@
+.colorfulBack {
+    margin: 0;
+    padding: 0;
+    z-index: -100;
+    height: 100vh;
+    width: 100%;
+    background: linear-gradient(45deg, #9dc66b 5%, #4fa49a 30%, #4361c2) fixed, fixed, fixed center center;
+    background-size: auto, cover, cover;
+}
+
+a {
+    transition: color 0.2s ease-in-out, border-color 0.2s ease-in-out, background-color 0.2s ease-in-out;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+a:link {
+    text-decoration: none;
+}
+
+a:visited {
+    text-decoration: none;
+}
+
+a:active {
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: none;
+}
+
+a.normal_text_link {
+    color: #aaaaaa;
+}
+
+a.normal_text_link:visited {
+    color: #aaaaaa;
+}
+
+a.normal_text_link:active {
+    color: #aaaaaa;
+}
+
+a.normal_text_link:link {
+    color: #aaaaaa;
+}
+
+a.normal_text_link:hover {
+    color: #636363;
+    text-decoration: dotted;
+}
+
+a.blue_text_link {
+    color: #4cace2;
+}
+
+a.blue_text_link:visited {
+    color: #4cace2;
+}
+
+a.blue_text_link:active {
+    color: #4cace2;
+}
+
+a.blue_text_link:link {
+    color: #4cace2;
+}
+
+a.blue_text_link:hover {
+    color: #326f92;
+}
+
+a.red_text_link {
+    color: #e7746f;
+}
+
+a.red_text_link:visited {
+    color: #e7746f;
+}
+
+a.red_text_link:active {
+    color: #e7746f;
+}
+
+a.red_text_link:link {
+    color: #e7746f;
+}
+
+a.red_text_link:hover {
+    color: #e92727;
+}
+
+.big-text{
+    font-size: 2rem;
+}
+
+
+.inline-image {
+    height: 0.9em;
+}
+
+/* 通用效果 */
+.white_text {
+    color: #ffffff;
+}
+
+.white-underline-title:after {
+    background: #dddddd;
+    content: '';
+    display: block;
+    height: 2px;
+    margin: 0.1em auto 0 auto;
+    position: relative;
+    width: 8.9em;
+}
+
+.colorful-underline-title, .white-underline-title {
+    font-size: 2em;
+    display: inline-block;
+    margin: 0;
+}
+
+.colorful-underline-title:after {
+    background: linear-gradient(90deg, #9dc66b, #4466bf, #8cc9f0);
+    display: block;
+    content: '';
+    width: 100%;
+    height: 2px;
+    margin: 0.7em 0 1em 0;
+    border-radius: 2px;
+}
+
+.clear {
+    clear: both;
+    display: block !important;
+}
+
+/* 按键 */
+.button-panel > :first-child {
+    margin-left: 0;
+}
+
+.left-button {
+    transition: color 0.1s ease-in-out, border-color 0.1s ease-in-out, background-color 0.1s ease-in-out;
+    background-color: #8cd1a8;
+    color: #ffffff;
+    border: 0;
+    padding: 2px 1em;
+    text-decoration: none;
+    font-size: 1em;
+    border-bottom-left-radius: 2px;
+    border-top-left-radius: 2px;
+    height: 2em;
+}
+
+.left-button:hover {
+    background-color: #71C894;
+    color: #ffffff;
+}
+
+.right-button {
+    transition: color 0.1s ease-in-out, border-color 0.1s ease-in-out, background-color 0.1s ease-in-out;
+    background-color: #8cd1a8;
+    color: #ffffff;
+    border: 0;
+    padding: 2px 1em;
+    text-decoration: none;
+    font-size: 1em;
+    border-bottom-right-radius: 2px;
+    border-top-right-radius: 2px;
+    height: 2em;
+}
+
+.right-button:hover {
+    background-color: #71C894;
+    color: #ffffff;
+}
+
+.button {
+    transition: color 0.1s ease-in-out, border-color 0.1s ease-in-out, background-color 0.1s ease-in-out;
+    background-color: #8cd1a8;
+    color: #ffffff;
+    border: 0;
+    padding: 2px 1em;
+    margin: 10px 40px;
+    display: inline-block;
+    text-decoration: none;
+    font-size: 1em;
+    border-radius: 2px;
+}
+
+.button:hover {
+    background-color: #71C894;
+    color: #ffffff;
+}
+
+.relief_button {
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0);
+    color: #607D8B;
+    border: 1px solid #009688;
+    padding: 0px 1em;
+    /*margin: 10px 40px;*/
+    display: inline-block;
+    text-align: center;
+    text-decoration: none;
+    font-size: 1em;
+    border-radius: 2px;
+    transition: color 0.1s ease-in-out, border-color 0.1s ease-in-out, background-color 0.1s ease-in-out;
+}
+
+.relief_button:hover {
+    background-color: rgba(0, 150, 136, 0.12);
+}
+
+.special-button {
+    transition: color 0.2s ease-in-out, border-color 0.2s ease-in-out, background-color 0.2s ease-in-out;
+    background-color: #e7746f;
+    color: #ffffff;
+    border: 0;
+    padding: 2px 1em;
+    margin: 10px 40px;
+    display: inline-block;
+    text-decoration: none;
+    border-radius: 2px;
+}
+
+.special-button:hover {
+    background-color: #E55254;
+}
+
+/*----------------*/
+
+#base {
+    background-color: #313a3d;
+}
+
+
+#navigator:hover {
+    background: #ffffff;
+    color: #607D8B;
+    animation: none;
+}
+
+#navigator:after {
+    background: #ffffff;
+    content: '';
+    height: 50vh;
+    left: 50%;
+    position: absolute;
+    top: 100%;
+    width: 1px;
+    z-index: -1;
+}
+
+/* 页面控制 */
+.wrapper {
+    max-width: 940px;
+    min-width: 100px;
+    margin: 0 auto;
+}
+
+.narrow-wrapper {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* 垂直对齐 */
+.v_mid_wrapper {
+    height: 100vh;
+    text-align: center;
+    position: relative;
+    vertical-align: middle;
+}
+
+.v_mid_wrapper:after {
+    display: inline-block;
+    width: 0;
+    height: 100%;
+    vertical-align: middle;
+    content: '';
+}
+
+.v_mid_wrapper > div {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+/*-------------*/
+/*登录注册界面主块*/
+.sign-up-main {
+    text-align: center;
+    margin: 0 auto;
+    color: #636363;
+    /*background:#FFFFFF;*/
+    position: relative;
+    padding: 1px 0px;
+    border-radius: 5px;
+    max-width: 420px;
+    width: 98%;
+}
+
+.login-main {
+    text-align: center;
+    margin: 0 auto;
+    color: #636363;
+    background:#FFFFFF;
+    position: relative;
+    padding: 32px 0px;
+    border-radius: 5px;
+    max-width: 380px;
+    width: 98%;
+}
+
+.wait{
+    background: #ffffff;
+    height: 100vh;
+    display: block;
+    text-align: center;
+    font-size: 2em;
+}
+
+a.icon-btn{
+    display: inline-block;
+    border: 0px;
+    border-radius: 100%;
+    color: #a3a3a3;
+    background-color: rgba(138, 138, 138, 0.2);
+    width: 70px;
+    font-size: 35px;
+    height: 70px;
+    line-height: 70px;
+    cursor: pointer;
+    position: relative;
+    transition: transform 0.1s ease-in;
+}
+a.icon-btn:hover {
+    background-color: rgba(138, 138, 138, 0.4);
+    transform: scale(1.15);
+}
+
+a.contact {
+    border: 0px;
+    border-radius: 100%;
+    background-color: rgba(138, 138, 138, 0.2);
+    display: inline-block;
+    width: 70px;
+    height: 70px;
+    cursor: pointer;
+    position: relative;
+    transition: transform 0.1s ease-in;
+}
+
+a.contact:hover {
+    background-color: rgba(138, 138, 138, 0.4);
+    transform: scale(1.15);
+}
+
+img.contact {
+    width: 50px;
+    height: 28px;
+    margin-top: 20px;
+}
+
+/*有关展示*/
+div.ability-box {
+    color: #FFFFFF;
+    background-color: #6C7276;
+    line-height: 110%;
+    padding: 5px;
+    margin: 2px;
+    border-radius: 2px;
+    display: inline-block;
+}
+
+div.ability-box-container {
+    /*display: inline-block;*/
+}
+
+/*---------------*/
+
+/* 表单元素 */
+
+select {
+    /*Chrome和Firefox里面的边框是不一样的，所以复写了一下*/
+    -webkit-border-radius: 1px;
+    -moz-border-radius: 1px;
+    border-radius: 1px;
+    border: solid 1px #eeeeee;
+    /*很关键：将默认的select选择框样式清除*/
+    appearance: none;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    /*在选择框的最右侧中间显示小箭头图片*/
+    background: url("http://ourjs.github.io/static/2015/arrow.png") no-repeat scroll right center #eeeeee;
+    /*为下拉小箭头留出一点位置，避免被文字覆盖*/
+    padding-right: 14px;
+    padding-left: 11px;
+    height: 2em;
+}
+
+/*清除ie的默认选择框样式清除，隐藏下拉箭头*/
+select::-ms-expand {
+    display: none;
+}
+
+input[type="text"], input[type="password"], input[type="number"], input[type="email"] {
+    /*float:left;*/
+    /*line-height:32px;*/
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    width: 100%;
+    padding: 0 11px;
+    height: 2em;
+    background-color: #eeeeee;
+    color: #333;
+    font-size: 1em;
+    border: 1px solid #eeeeee;
+    border-radius: 2px;
+    outline: 0;
+    vertical-align: middle;
+}
+
+input[type="text"]:hover, input[type="password"]:hover, input[type="number"]:hover, input[type="email"]:hover {
+    border: solid 1px #ddd;
+}
+
+input[type="text"]:hover:active, input[type="text"]:hover:focus, input[type="password"]:hover:active, input[type="password"]:hover:focus, textarea:hover:active, textarea:hover:focus {
+    border: 1px solid #4cace2;
+}
+input[type="number"]:hover:active,input[type="number"]:hover:focus{
+    border: 1px solid #4cace2;
+}
+
+input[type="number"]:active,input[type="number"]:focus{
+    border: 1px solid #4cace2;
+}
+
+input[type="text"]:active, input[type="text"]:focus, input[type="password"]:active, input[type="password"]:focus, textarea:active, textarea:focus {
+    border: 1px solid #4cace2;
+}
+
+input.group-left {
+    border-bottom-right-radius: 0px !important;
+    border-top-right-radius: 0px !important;
+    border: 1px solid #8cd1a8 !important;
+}
+
+input.group-left:hover {
+    border: 1px solid #71C894 !important;
+}
+
+input.group-right {
+    border-bottom-left-radius: 0px !important;
+    border-top-left-radius: 0px !important;
+    border: 1px solid #8cd1a8 !important;
+}
+
+input.group-right:hover {
+    border: 1px solid #71C894 !important;
+}
+
+input.error-input{
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 5px rgba(59,180,242,.3) !important;
+    -moz-box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 5px rgba(59,180,242,.3) !important;
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 5px rgba(59,180,242,.3) !important;
+    border-color: #e91e63 !important;
+}
+
+textarea {
+    height: 10em;
+    width: 100%;
+    background-color: #eeeeee;
+    border: 1px solid #eeeeee;
+    padding: 2px 11px;
+    font-size: 1em;
+    box-sizing: border-box;
+    border-radius: 2px;
+    outline: 0;
+    resize: vertical;
+}
+
+textarea:hover {
+    border: solid 1px #ddd;
+}
+
+input[type="submit"] {
+    height: 2em;
+    padding: 2px;
+    font-size: 1em;
+    color: #61686b;
+    letter-spacing: 0.25em;
+    margin-left: 0px;
+    border-radius: 1px;
+    background-color: rgba(144, 144, 144, 0.15);
+    border: 1px solid #aaa;
+    width: 100%;
+    position: relative;
+    text-align: center;
+    transform: translateZ(0);
+    display: inline-block;
+    box-sizing: border-box;
+}
+
+input[type="submit"]:after {
+    content: " ";
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    background: #fff;
+    transform: scaleX(0);
+    transition: transform 0.2s ease-in;
+    z-index: -1;
+}
+
+.disable {
+    cursor: not-allowed;
+    background: #eee;
+    border: 1px solid #ddd;
+}
+
+input[type="submit"]:hover:after {
+    background-color: #fff;
+    transform: scaleX(1);
+}
+
+.readonly, .readonly:hover {
+    background: white !important;
+    border-radius: 0;
+    border: none !important;
+}
+
+.simple-tuple {
+    text-align: left;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    position: relative;
+    display: block;
+    box-sizing: content-box;
+}
+
+.simple-tuple * {
+    display: inline-block;
+    margin-top: 0;
+    margin-bottom: 0;
+    vertical-align: middle;
+}
+
+div.tuple {
+    text-align: left;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    position: relative;
+}
+
+div.tuple * {
+    display: inline-block;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+div.tuple > input[type="text"] {
+    position: absolute;
+    width: 70%;
+    right: 0;
+}
+
+div.tuple > input[type="password"] {
+    position: absolute;
+    width: 70%;
+    right: 0;
+}
+
+div.tuple span {
+    float: right;
+    width: 70% !important;
+}
+
+.tuple textarea {
+    float: right;
+    display: block;
+}
+
+#forget {
+    float: left;
+}
+
+#register {
+    float: right;
+}
+
+.submit-button {
+    height: 2em;
+    padding: 2px;
+    font-size: 1em;
+    color: #61686b;
+    letter-spacing: 0.25em;
+    margin-left: 0px;
+    border-radius: 1px;
+    background-color: rgba(144, 144, 144, 0.15);
+    border: 1px solid #aaa;
+    width: 100%;
+    position: relative;
+    text-align: center;
+    transform: translateZ(0);
+    display: inline-block;
+    box-sizing: border-box;
+}
+
+.submit-button:after {
+    content: " ";
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    background: #fff;
+    transform: scaleX(0);
+    transition: transform 0.2s ease-in;
+    z-index: -1;
+}
+
+.submit-button:hover:after {
+    background-color: #fff;
+    transform: scaleX(1);
+}
+
+.checkbox {
+    display: inline-block;
+    height: 2em;
+    vertical-align: sub;
+}
+
+/*表格*/
+table.list-operation-table {
+    width: 100%;
+}
+
+table.list-operation-table .title-row {
+    background: #E7E7E7;
+    text-align: left;
+    width: 100%;
+}
+
+table.list-operation-table .normal-row {
+    text-align: left;
+    width: 100%;
+}
+
+table.list-operation-table .normal-row:hover {
+    background: #EEE;
+}
+
+table.list-operation-table .normal-row .blue_text_link {
+    color: #61686b;
+}
+
+table.list-operation-table .normal-row .red_text_link {
+    color: #61686b;
+}
+
+table.list-operation-table .normal-row .blue_text_link:hover {
+    color: #326f92;
+}
+
+table.list-operation-table .normal-row .red_text_link:hover {
+    color: #e92727;
+}
+
+/*------------*/
+
+/*底端footer*/
+div.btm {
+    margin-top: 40px;
+    color: #FFFFFF;
+    text-align: center;
+    width: 100%;
+}
+
+a.btm {
+    border-bottom: dotted 1px;
+}
+
+a.btm:link {
+    text-decoration: none;
+    color: #FFFFFF;
+}
+
+a.btm:visited {
+    text-decoration: none;
+    color: #FFFFFF;
+}
+
+a.btm:hover {
+    border-bottom: none;
+}
+
+a.go_back{
+    color:#ffffff;
+    text-decoration: none;
+}
+a.go_back:link{
+    color:#ffffff;
+    text-decoration: none;
+}
+a.go_back:visited{
+    color:#ffffff;
+    text-decoration: none;
+}
+a.go_back:hover{
+    color:#ffffff;
+    text-decoration: none;
+}
+
+/*---------------*/
+#verifyImage{
+    height: 32px;
+    vertical-align: middle;
+}

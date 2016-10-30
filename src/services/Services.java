@@ -1,6 +1,5 @@
 package services;
 
-import com.sun.tools.internal.xjc.reader.xmlschema.bindinfo.BIConversion;
 import dao.RaspDevicesRepository;
 import dao.UsersRepository;
 import datastruct.ForwardingTableCols;
@@ -23,16 +22,20 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * Created by huangzhengyue on 9/16/16.
  */
+
+/**
+ * 注意， 设备是必须一直保持连接  用户不一定，只要使用登录时获取的sessionID 就可以永久操作
+ */
 public class Services {
 
     //singleton
     private static Services ourInstance = new Services();
 
-    //在线设备信息表
+    //在线设备信息表 包含设备应该的转发信息
     private ConcurrentHashMap<DeviceConnection, OnlineDeviceInfo> onlineDevicesTable = new ConcurrentHashMap<>();
     //在线用户表 sessionID as index
     private ConcurrentHashMap<String, OnlineUser> onlineUserTable = new ConcurrentHashMap<>();
-    //用户--设备连接转发表
+    //用户当前连接-->设备连接转发表, 包含用户session id
     private ConcurrentHashMap<UserConnection, ForwardingTableCols> userConnectionForwardingTable = new ConcurrentHashMap<>();
 
     public static Services getInstance() {
@@ -46,7 +49,7 @@ public class Services {
     /***************
      *
      *   设备登录
-     *   (设备登录不同于用户登录，设备登录会保持连接，而用户登录返回session id)
+     *   (设备登录不同于用户登录，设备登录会保持连接，用户登录不会保持连接（这个函数不会体现这些操作，但其它地方处理要注意）
      *
      * */
     public void deviceLogin(String deviceID, String password, DeviceConnection deviceConnection) throws TCPServicesException{
@@ -66,12 +69,18 @@ public class Services {
         //插入在线设备表
         onlineDevicesTable.put(deviceConnection,new OnlineDeviceInfo(deviceID));
     }
-    /****************************
+
+    /**
+     * 用户登录
      *
-     *   用户登录
-     *   (设备登录不同于用户登录，设备登录会保持连接，而用户登录返回session id)
+     * (设备登录不同于用户登录，设备登录会保持连接，用户登录不会保持连接（这个函数不会体现这些操作，但其它地方处理要注意）
      *
-     * */
+     * @param userName 用户名
+     * @param password 用户密码
+     * @return 该连接的sessionID
+     * @throws TCPServicesException
+     */
+
     public String userLogin(String userName, String password) throws TCPServicesException {
         //验证密码
         Connection dbConnection= DBHelper.getDBConnection();
@@ -92,18 +101,33 @@ public class Services {
         onlineUserTable.put(sessionID,new OnlineUser(userName));
         return sessionID;
     }
-    /************
-     *
-     *   设备下线
-     *
-     * */
+
+    /**
+     * 用户名直接登录,仅用于可信用户（比如已经通过http登录的用户）
+     * @param userName 用户名
+     * @return 该连接的sessionID
+     */
+    public String userLogin(String userName) {
+        //generate sessionID
+        String sessionID = UniqueIdGenerator.generate();
+        //插入在线用户表
+        onlineUserTable.put(sessionID,new OnlineUser(userName));
+        return sessionID;
+    }
+
+
+    /**
+     * 设备下线
+     * @param deviceConnection 设备连接
+     * @throws TCPServicesException
+     */
     public void deviceLogout(DeviceConnection deviceConnection) throws TCPServicesException{
         try {
             //如果设备已连用户端接则断开用户连接
             ArrayList<UserConnection> connectionArrayList=onlineDevicesTable.get(deviceConnection).forwardingConnections;
-            connectionArrayList.forEach(k->{
-                k.closeConnection();
-                userConnectionForwardingTable.remove(k);
+            connectionArrayList.forEach(userConnection->{
+                userConnection.closeConnection();
+                userConnectionForwardingTable.remove(userConnection);
             });
             onlineDevicesTable.remove(deviceConnection);
         }catch (NullPointerException e){
@@ -118,12 +142,53 @@ public class Services {
      * */
     public void userLogout(String sessionID) throws TCPServicesException{
         try {
+            //删除 用户在线表
             onlineUserTable.remove(sessionID);
-            userConnectionForwardingTable.forEach((k, v)->{
-                if(v.userSessionID.equals(sessionID)){
-                    userConnectionForwardingTable.remove(k);
+            userConnectionForwardingTable.forEach(((userConnection, forwardingTableCols) -> {
+                if(forwardingTableCols.userSessionID.equals(sessionID)){
+                    //删除 设备-->用户转发规则
+                    onlineDevicesTable.forEach(((deviceConnection, onlineDeviceInfo) -> {
+                        onlineDeviceInfo.forwardingConnections.removeIf(userConnection1 -> {
+                            if(userConnection==userConnection1){
+                                return true;
+                            }
+                            else {
+                                return false;
+                            }
+                        });
+                    }));
+                    //删除 用户-->设备转发规则
+                    userConnectionForwardingTable.remove(userConnection);
                 }
+            }));
+        }catch (NullPointerException e){
+            throw new TCPServicesException("no such user(null pointer)\n"+e.toString());
+        }
+    }
+
+    /**
+     * 停止某个用户转发 （用于处理用户连接突然断开，但是没有退出登录）
+     * @param userConnection
+     * @throws TCPServicesException
+     */
+    public void stopUserForwarding(UserConnection userConnection) throws TCPServicesException{
+        try {
+            //删除 设备-->用户转发规则
+            onlineDevicesTable.forEach((deviceConnection, onlineDeviceInfo) -> {
+                onlineDeviceInfo.forwardingConnections.removeIf(userConnection1 -> {
+                    if(userConnection==userConnection1){
+                        return true;
+                    }
+                    else {
+                        return false;
+                    }
+                });
             });
+
+            //删除 用户-->设备转发规则
+            userConnectionForwardingTable.remove(userConnection);
+
+
         }catch (NullPointerException e){
             throw new TCPServicesException("no such user(null pointer)\n"+e.toString());
         }
@@ -158,11 +223,12 @@ public class Services {
      * @param userConnection
      * @throws TCPServicesException
      */
-    public void connectDevice(String userSessionID, String deviceID, UserNonBrowserClientConnection userConnection) throws TCPServicesException{
+    public void connectDevice(String userSessionID, String deviceID, UserConnection userConnection) throws TCPServicesException{
         //check online
-        if(!onlineUserTable.containsKey(userSessionID)){
+        if(!onlineUserTable.containsKey(userSessionID) && !userSessionID.equals("http")){
             throw new TCPServicesException("user not login");
         }
+
         OnlineDeviceInfo onlineDevice =null;
         DeviceConnection deviceConnection = null;
         for (DeviceConnection connection: onlineDevicesTable.keySet()) {
@@ -187,13 +253,12 @@ public class Services {
     }
 
     /**
-     * 断开用户设备连接
+     * 用户断开设备连接
      * @param userSessionID
      * @param deviceID
      * @param userConnection
      * @throws TCPServicesException
      */
-    //detach the device
     public void detachDevice(String userSessionID, String deviceID, UserNonBrowserClientConnection userConnection) throws TCPServicesException {
         //check online
         if(!onlineUserTable.containsKey(userSessionID)){
@@ -222,7 +287,7 @@ public class Services {
      *    转发   用户--->设备
      * */
 
-    public void userToDeviceForwarding(UserNonBrowserClientConnection userConnection, byte[] head, byte[] data){
+    public void userToDeviceForwarding(UserConnection userConnection, byte[] head, byte[] data){
         TCPConnection destinationConnection = userConnectionForwardingTable.get(userConnection).forwardingToConnection;
         byte[] sendData = new byte[head.length+data.length];
         System.arraycopy(head,0,sendData,0,head.length);
