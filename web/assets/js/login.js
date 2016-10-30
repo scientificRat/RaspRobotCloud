@@ -36,8 +36,9 @@ $(document).ready(function () {
         sendData["verifyingCode"] = verifyingCode;
         $.ajax({
             type: "POST", url: "/servlet/login", data: sendData, success: function (feedback) {
-                if (feedback.success) {
-                    window.location.href = "control.html";
+                if (feedback["login"]) {
+                    //跳转
+                    window.location.href = "control.html?sessionID="+feedback["sessionID"];
                 }
                 else {
                     //刷新验证码

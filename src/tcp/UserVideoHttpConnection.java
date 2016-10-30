@@ -16,6 +16,7 @@ import java.util.Date;
 public class UserVideoHttpConnection extends TCPConnection implements UserConnection {
 
     private String mSessionID = null;
+    private boolean videoSendReady =false;
 
 
     private final String BOUNDARY = "boundarydonotcross";
@@ -89,6 +90,7 @@ public class UserVideoHttpConnection extends TCPConnection implements UserConnec
     }
 
     private void startSendStream() throws IOException {
+        videoSendReady =true;
         String resp = "HTTP/1.0 200 OK\r\n" +
                 STD_HEADER +
                 "Content-Type: multipart/x-mixed-replace;boundary=" + BOUNDARY + "\r\n" +
@@ -127,7 +129,9 @@ public class UserVideoHttpConnection extends TCPConnection implements UserConnec
 
     @Override
     public void sendForwardingData(byte[] data) {
-        sendVideoStream(data,5,data.length-5);
+        if(videoSendReady){
+            sendVideoStream(data,5,data.length-5);
+        }
     }
 
     public void printError(String content) {

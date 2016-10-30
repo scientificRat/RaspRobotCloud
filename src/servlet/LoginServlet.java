@@ -2,6 +2,8 @@ package servlet;
 
 import com.google.gson.Gson;
 import dao.UsersRepository;
+import datastruct.dataobj.LoginInfo;
+import services.Services;
 import utility.DBHelper;
 import utility.GeneralJsonBuilder;
 
@@ -10,6 +12,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.ws.Service;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
@@ -37,9 +40,15 @@ public class LoginServlet extends HttpServlet {
         String quit = req.getParameter("logout");
         String verifyingCode = req.getParameter("verifyingCode");
 
-        //退出登录 即清除session
+        //退出登录 即清除session 请求services 删除当前和小车通讯的sessionID
         if (quit != null && quit.equals("logout")) {
+
+            Services services = Services.getInstance();
+            services.userLogout((String) req.getSession().getAttribute("sessionID"));
+
             req.getSession().removeAttribute("userName");
+            req.getSession().removeAttribute("sessionID");
+            //返回
             out.print(GeneralJsonBuilder.succuss(true));
             return;
         }
@@ -73,10 +82,23 @@ public class LoginServlet extends HttpServlet {
         UsersRepository usersRepository = new UsersRepository(dbConnection);
         //清除当前session
         req.getSession().removeAttribute("userName");
+        req.getSession().removeAttribute("sessionID");
         try {
             // 查询数据库
             if (usersRepository.queryExist(loginName, password)) {
-                out.println(GeneralJsonBuilder.succuss(true));
+                //生成和小车通讯的sessionID
+                Services services = Services.getInstance();
+                String sessionID = services.userLogin(loginName);
+                //写入session
+                req.getSession().setAttribute("userName", loginName);
+                req.getSession().setAttribute("sessionID", sessionID);
+                //准备返回信息
+                Gson gson = new Gson();
+                LoginInfo loginInfo = new LoginInfo();
+                loginInfo.setLogin(true);
+                loginInfo.setSessionID(sessionID);
+
+                out.println(gson.toJson(loginInfo));
             } else {
                 out.println(GeneralJsonBuilder.error("用户名或密码错误"));
             }
