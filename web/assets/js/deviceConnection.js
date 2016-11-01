@@ -3,26 +3,45 @@
  */
 var connectionDeviceID = getQueryString("connectionDeviceID");
 var sessionID = getQueryString("sessionID");
-$(document).ready(function() {
+$(document).ready(function () {
     "use strict";
-    $("#up").click(function() {
-
+    $("#up").click(function () {
+        sendMovementCommand(connectionDeviceID, 0, 0.9);
     });
 
-    $("#down").click(function() {
-
+    $("#down").click(function () {
+        sendMovementCommand(connectionDeviceID, 0, -0.9);
     });
 
-    $("#left").click(function() {
-
+    $("#left").click(function () {
+        sendMovementCommand(connectionDeviceID, -0.9, 0);
     });
 
-    $("#right").click(function() {
-
+    $("#right").click(function () {
+        sendMovementCommand(connectionDeviceID, -0.9, 0);
     });
 
-    var videoPanel =$("#video");
-    videoPanel.attr("src","http://"+window.location.hostname + ":8999/?mj=" +sessionID+","+connectionDeviceID);
+    var videoPanel = $("#video");
+    videoPanel.attr("src", "http://" + window.location.hostname + ":8999/?mj=" + sessionID + "," + connectionDeviceID);
     videoPanel.fadeIn();
 
 });
+
+function sendMovementCommand(deviceID, offsetX, offsetY) {
+    $.ajax({
+        url: "/servlet/deviceControl",
+        type: "POST",
+        data: {offsetX: offsetX, offsetY: offsetY, requestedDeviceID: deviceID},
+        success: function (feedback) {
+            if (feedback.success) {
+
+            }
+            if (feedback.error) {
+                alert(feedback.error);
+            }
+        },
+        error: function () {
+            alert("请检查网络连接情况")
+        }
+    });
+}

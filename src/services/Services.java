@@ -15,9 +15,13 @@ import utility.DBHelper;
 import utility.UniqueIdGenerator;
 
 import java.net.SocketException;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -308,6 +312,52 @@ public class Services {
         for (int i = 0; i < destinationConnectionArrayList.size(); i++) {
             destinationConnectionArrayList.get(i).sendForwardingData(sendData);
         }
+    }
+
+    /**
+     * 服务器直接向设备发送数据，不管当前是谁操作
+     * 【危险操作】谨慎使用
+     * @param deviceID 设备号
+     * @param data 数据
+     * @throws TCPServicesException 异常
+     */
+    public void sendDeviceRawData(String deviceID,byte[] data) throws TCPServicesException{
+        if(onlineDevicesTable.size()==0){
+            throw new TCPServicesException("no such device");
+        }
+        DeviceConnection selectedDeviceConnection =null;
+        for (Map.Entry<DeviceConnection,OnlineDeviceInfo> pair:onlineDevicesTable.entrySet()) {
+            if(pair.getValue().deviceID .equals(deviceID)){
+                selectedDeviceConnection = pair.getKey();
+                break;
+            }
+        }
+        try {
+            selectedDeviceConnection.sendForwardingData(data);
+        }catch (NullPointerException ne){
+            throw new TCPServicesException("connection break");
+        }
+    }
+
+    /**
+     * 服务器直接向设备发送控制运动数据，不管当前是谁操作
+     * 【危险操作】谨慎使用
+     * @param deviceID 控制设备号
+     * @param offsetX x偏移
+     * @param offsetY y偏移
+     * @throws TCPServicesException 异常
+     */
+    public void sendDeviceMovementCommand(String deviceID,float offsetX,float offsetY) throws TCPServicesException {
+        ByteBuffer buf =ByteBuffer.allocate(13);
+        // 一律按小端序发送
+        buf.order(ByteOrder.LITTLE_ENDIAN);
+        byte type ='c';
+        buf.put(type);
+        buf.putInt(8);
+        buf.putFloat(offsetX);
+        buf.putFloat(offsetY);
+        byte[] sendData = buf.array();
+        sendDeviceRawData(deviceID,sendData);
     }
 
 }
