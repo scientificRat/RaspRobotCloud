@@ -12,12 +12,10 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.ws.Service;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.HashMap;
 
 /**
  * Created by huangzhengyue on 2016/10/30.
@@ -97,7 +95,7 @@ public class LoginServlet extends HttpServlet {
                 LoginInfo loginInfo = new LoginInfo();
                 loginInfo.setLogin(true);
                 loginInfo.setSessionID(sessionID);
-
+                //返回信息
                 out.println(gson.toJson(loginInfo));
             } else {
                 out.println(GeneralJsonBuilder.error("用户名或密码错误"));

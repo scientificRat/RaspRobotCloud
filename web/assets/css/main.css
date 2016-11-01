@@ -341,28 +341,6 @@ a.icon-btn:hover {
     transform: scale(1.15);
 }
 
-a.contact {
-    border: 0px;
-    border-radius: 100%;
-    background-color: rgba(138, 138, 138, 0.2);
-    display: inline-block;
-    width: 70px;
-    height: 70px;
-    cursor: pointer;
-    position: relative;
-    transition: transform 0.1s ease-in;
-}
-
-a.contact:hover {
-    background-color: rgba(138, 138, 138, 0.4);
-    transform: scale(1.15);
-}
-
-img.contact {
-    width: 50px;
-    height: 28px;
-    margin-top: 20px;
-}
 
 /*有关展示*/
 div.ability-box {
@@ -716,8 +694,13 @@ a.go_back:hover{
     text-decoration: none;
 }
 
+
+
+
 /*---------------*/
 #verifyImage{
     height: 32px;
     vertical-align: middle;
 }
+
+

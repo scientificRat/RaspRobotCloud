@@ -38,7 +38,7 @@ $(document).ready(function () {
             type: "POST", url: "/servlet/login", data: sendData, success: function (feedback) {
                 if (feedback["login"]) {
                     //跳转
-                    window.location.href = "control.html?sessionID="+feedback["sessionID"];
+                    window.location.href = "control.html";
                 }
                 else {
                     //刷新验证码

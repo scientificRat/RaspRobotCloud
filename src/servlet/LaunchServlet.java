@@ -19,7 +19,7 @@ import java.io.PrintWriter;
  * Created by huangzhengyue on 9/16/16.
  */
 @WebServlet("/servlet/startServer")
-public class StartServlet extends HttpServlet {
+public class LaunchServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setCharacterEncoding("UTF-8");
@@ -42,8 +42,8 @@ public class StartServlet extends HttpServlet {
                 out.print(GeneralJsonBuilder.error("devicePort or userPort wrong!"));
                 return;
             }
-            // find the servers in context
 
+            // find the servers in context
             TCPServer deviceServer = (TCPServer) this.getServletContext().getAttribute("DeviceServer");
             TCPServer userServer = (TCPServer) this.getServletContext().getAttribute("UserServer");
             TCPServer videoServer = (TCPServer) this.getServletContext().getAttribute("VideoHttpServer");

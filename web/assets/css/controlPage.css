@@ -1,0 +1,403 @@
+/*主容器*/
+.control-main-container{
+    position: relative;
+    box-sizing: border-box;
+    margin: auto;
+    max-width: 900px;
+}
+
+/*左端导航栏*/
+.leftNavigator{
+    width: 280px;
+    height: 100vh;
+    background: RGBA(57, 57, 57, 0.9);
+    text-align: left;
+    position: relative;
+    float: left;
+}
+.leftHeader{
+    width: 100%;
+    padding: 10px 10px;
+    text-align: center;
+}
+input.search{
+    margin: 10px 0px !important;
+    width: 100% !important;
+    /*color: white !important;*/
+}
+input.search:active,input.search:focus{
+    border: none !important;
+}
+
+
+.personal_info{
+    display: block;
+    margin-top:10px;
+}
+
+img.menu_icon{
+    height: 30px;
+    position: absolute;
+    right: 0px;
+    top:2px;
+
+}
+
+img.circlePicture{
+    border-radius: 100%;
+    width: 40px;
+}
+.selector img{
+    height: 30px;
+    margin: 10px 23px;
+}
+.selector a{
+    display: inline-block;
+    position: relative;
+}
+.selector a:hover:after{
+    position: absolute;
+    content: "";
+    background: #aaa;
+    width: 100%;
+    height: 1px;
+    left: auto;
+    bottom: 0px;
+    display: block;
+}
+
+/*cars panel*/
+div#cars{
+    display: block;
+}
+.car_item{
+    color: white;
+    position: relative;
+    padding: 20px 10px;
+    overflow: hidden;
+    cursor: pointer;
+}
+.car_item:hover{
+    background: #5d5d5d;
+}
+.car_item:active{
+    background: #4fa49a;
+}
+.car_item span{
+    display: block;
+    float: left;
+}
+
+
+/*右边的操作栏*/
+div.rightPanel{
+    background: #ddd;
+    max-width: 600px;
+    width:600px;
+    height: 100vh;
+    position: absolute;
+    left: 280px;
+    text-align: center;
+
+}
+.rightPanel h2{
+    margin: 20px 0px 20px 0px;
+    font-size: 30px;
+    color: #3A4043;
+
+}
+div.dashboard{
+    width: 400px;
+    margin: auto;
+    text-align: left;
+    position: relative;
+    display: none;
+}
+#runtime_info{
+    text-align: left;
+    border: solid 1px #5f8965;
+    width: 60%;
+    margin: 2px 2px;
+    background: #fff;
+    border-radius: 5px;
+    overflow: hidden;
+    color: #aaa;
+    display: inline-table;
+}
+#runtime_info span{
+    position: relative;
+    left: 14px;
+}
+#runtime_info span:before{
+    position: absolute;
+    content: "";
+    left: -12px;
+    top:2px;
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 100%;
+    background: #227CC1;
+}
+
+div.runtime_info_title{
+    background: #5F8965;
+    text-align: left;
+    height: 30px;
+    color: white;
+    padding: 5px;
+    overflow: hidden;
+}
+
+#pi_show img{
+    width:500px;
+    -webkit-transition:width 0.4s ease-in-out 0s;
+    -moz-transition:width 0.4s ease-in-out 0s;
+    transition:width 0.4s ease-in-out 0s;
+}
+#pi_show img:hover{
+    width:540px;
+    -webkit-transition:width 0.4s ease-in-out 0s;
+    -moz-transition:width 0.4s ease-in-out 0s;
+    transition:width 0.4s ease-in-out 0s;
+}
+.buttons_panel{
+    position: absolute;
+    right: 0px;
+    top:0px;
+    width: 35%;
+}
+.control_button{
+    display: block;
+    background: #227CC1;
+    padding: 6px;
+    border-radius: 2px;
+    color:#fff;
+    width: 100%;
+    margin-bottom: 10px;
+    text-align: center;
+    position: relative;
+    transform: translateZ(0);
+}
+.control_button:after{
+    content: "";
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 0px;
+    height: 100%;
+    background: #3A4043;
+    -webkit-transition:width 0.3s ease 0s;
+    -moz-transition:width 0.3s ease 0s;
+    transition:width 0.3s ease 0s;
+    z-index: -1;
+}
+
+.control_button:hover:after{
+    content: "";
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    background: #3A4043;
+    -webkit-transition:width 0.6s cubic-bezier(0.52, 1.64, 0.37, 0.66) 0s;
+    -moz-transition:width 0.6s cubic-bezier(0.52, 1.64, 0.37, 0.66) 0s;
+    transition:width 0.6s cubic-bezier(0.52, 1.64, 0.37, 0.66) 0s;
+}
+
+.configuration_button{
+    display: block;
+    background: #227CC1;
+    padding: 6px;
+    border-radius: 2px;
+    color:#fff;
+    width: 100%;
+    margin-bottom: 10px;
+    text-align: center;
+    position: relative;
+    transform: translateZ(0);
+}
+.configuration_button:after{
+    content: "";
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 0px;
+    height: 100%;
+    background: #3A4043;
+    -webkit-transition:width 0.3s ease 0s;
+    -moz-transition:width 0.3s ease 0s;
+    transition:width 0.3s ease 0s;
+    z-index: -1;
+}
+
+.configuration_button:hover:after{
+    content: "";
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    background: #3A4043;
+    -webkit-transition:width 0.6s cubic-bezier(0.52, 1.64, 0.37, 0.66) 0s;
+    -moz-transition:width 0.6s cubic-bezier(0.52, 1.64, 0.37, 0.66) 0s;
+    transition:width 0.6s cubic-bezier(0.52, 1.64, 0.37, 0.66) 0s;
+}
+.delete_button{
+    display: block;
+    background: #b72a34;
+    padding: 6px;
+    border-radius: 2px;
+    color:#fff;
+    width: 100%;
+    margin-bottom: 10px;
+    text-align: center;
+    position: relative;
+    transform: translateZ(0);
+}
+
+.delete_button:after{
+    content: "";
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 0px;
+    height: 100%;
+    background: #3A4043;
+    -webkit-transition:width 0.3s ease 0s;
+    -moz-transition:width 0.3s ease 0s;
+    transition:width 0.3s ease 0s;
+    z-index: -1;
+}
+
+.delete_button:hover:after{
+    content: "";
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    background: #3A4043;
+    -webkit-transition:width 0.6s cubic-bezier(0.52, 1.64, 0.37, 0.66) 0s;
+    -moz-transition:width 0.6s cubic-bezier(0.52, 1.64, 0.37, 0.66) 0s;
+    transition:width 0.6s cubic-bezier(0.52, 1.64, 0.37, 0.66) 0s;
+}
+
+.dir_button{
+    background-color: #607D8B;
+    color: #ffffff;
+    border: 0px;
+    padding: 2px 1em;
+    /*margin: 10px 40px;*/
+    display: inline-block;
+    text-decoration: none;
+    font-size: 1em;
+    border-radius: 2px;
+}
+.dir_button:hover {
+    background-color: #3F51B5;
+}
+.white-color-font{
+    color: #fff;
+}
+.white-color-font:hover{
+    color: #fff;
+}
+.white-color-font:focus{
+    color: #fff;
+}
+
+.white-button{
+    background: transparent;
+    border-radius: 2px;
+    border: solid 1px white;
+    color:white;
+    padding: 1px 4px;
+}
+.white-button:hover{
+    background: white;
+    color:#3c4441;
+}
+.white-button:focus{
+    background: white;
+    color:#3c4441;
+}
+.device-list-button{
+    color: #9E9E9E;
+    cursor: pointer;
+}
+.device-list-button i{
+    color: white;
+}
+
+.connect{
+    background: #4fa49a;
+}
+.connect:hover{
+    background: #4fa49a;
+}
+.connect:active{
+    background: #4fa49a;
+}
+
+
+div.config-item{
+    text-align: left;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    position: relative;
+}
+
+div.config-item *{
+    display: inline-block;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+div.config-item input[type="text"]{
+    position: absolute;
+    right:0;
+}
+div.config-item input[type="number"]{
+    position: absolute;
+    right:0;
+}
+
+
+.color-block {
+    box-sizing: content-box;
+    height: 50px;
+    color: #FFFFFF;
+    font-size: 32px;
+    display: block;
+    padding: 14px 20px 10px 20px;
+}
+.color-block p {
+    margin: 0px 0px 0px 20px;
+    display: inline-block;
+}
+.color-block a {
+    display: inline-block;
+}
+.color-block img {
+    width: 30px;
+    vertical-align: middle;
+}
+.gray-back {
+    background-color: #607D8B;
+}
+.blue-back {
+    background-color: #227CC1;
+}
+.red-back {
+    background-color: #F44336;
+}
+.green-back {
+    background-color: #03756b;
+}
+.dark-blue-back {
+    background-color: #4984ad;
+}
+.narrow-wrapper {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+}

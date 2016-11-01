@@ -71,6 +71,7 @@ public class RaspDevicesRepository extends Repository {
 
         while (resultSet.next()){
             DeviceInfo deviceInfo= new DeviceInfo();
+            deviceInfo.setDeviceID(resultSet.getString("device_id"));
             deviceInfo.setHardwareDescription(resultSet.getString("hardware_description"));
             deviceInfoArrayList.add(deviceInfo);
         }

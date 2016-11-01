@@ -9,7 +9,7 @@ import java.sql.SQLException;
  * Created by huangzhengyue on 8/1/16.
  */
 public class DBHelper {
-    //default dadabase
+    //default database
     private static final String databaseUrl="jdbc:postgresql://123.206.21.185:5432/rasp_robot_cloud";
     private static final String databaseUserName="postgres";
     private static final String databaseUserPassword="199606128";

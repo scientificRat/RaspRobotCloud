@@ -8,6 +8,7 @@ public class DeviceInfo {
     private String deviceID;
     private String password;
     private String hardwareDescription;
+    private boolean online;
 
     public String getDeviceID() {
         return deviceID;
@@ -25,12 +26,19 @@ public class DeviceInfo {
         this.password = password;
     }
 
-
     public String getHardwareDescription() {
         return hardwareDescription;
     }
 
     public void setHardwareDescription(String hardwareDescription) {
         this.hardwareDescription = hardwareDescription;
+    }
+
+    public boolean isOnline() {
+        return online;
+    }
+
+    public void setOnline(boolean online) {
+        this.online = online;
     }
 }

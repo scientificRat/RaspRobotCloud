@@ -5,12 +5,70 @@
     <meta name="renderer" content="webkit">
     <meta http-equiv="Cache-Control" content="no-siteapp"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <title>登录</title>
+    <title>树莓派搜救小车平台</title>
     <link rel="stylesheet" href="assets/css/amazeui.min.css">
     <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet" href="assets/css/controlPage.css">
 </head>
-<body>
+<body class="colorfulBack">
+<div class="control-main-container">
+    <div class="leftNavigator white-color-font">
+        <div class="leftHeader">
+            <div class="white-color-font personal_info am-vertical-align am-text-left">
+                <span>
+                    <img class="circlePicture" src="assets/images/user-default.jpg" alt="" />
+                </span>
+                <span class="am-vertical-align-middle am-margin-left-sm" id="userName"><i class="am-icon-spinner am-icon-pulse"></i></span>
+                <a id="logout" class="white-button am-vertical-align-middle am-margin-left-sm">退出</a>
+            </div>
+        </div>
+        <hr>
+        <div id="refresh" class="am-text-center device-list-button">刷新设备列表&nbsp<i class="am-icon-refresh"></i></div>
+        <div id="cars">
 
+        </div>
+        <div id="test">
+            <div class="car_item" dt="RPI_Test_001">
+                <span>RPI_Test_001 (demo)</span>
+            </div>
+            <div class="car_item" dt="RPI_002">
+                <span>RPI_002 (demo)</span>
+            </div>
+            <div class="car_item" dt="RPI_003">
+                <span>RPI_003 (demo)</span>
+            </div>
+        </div>
 
+    </div>
+    <div class="rightPanel">
+        <h2>设备详情</h2>
+        <div id="pi_show">
+            <img id="pi_show_img" src="assets/images/raspberry_pi.png"/>
+        </div>
+        <div class="dashboard">
+            <div id="runtime_info">
+                <div class="runtime_info_title">控制面板</div>
+                <span id="deviceName">设备名：-----</span><br/>
+                <span id="status">运行状态：正常</span><br/>
+                <span id="cpu">cpu：1GHZ</span><br/>
+                <span id="memory">memory：2GB</span>
+            </div>
+            <div class="buttons_panel">
+                <a id="connectDevice" href="deviceConnection.html" target="_blank" class="control_button white-color-font">
+                    <span id="control_str">连接设备</span>
+                </a>
+                <a href="config.html" target="_blank" class="configuration_button white-color-font">
+                    <span>配置管理</span>
+                </a>
+                <a class="delete_button white-color-font">
+                    <span>删除设备</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="assets/js/lib/jquery-3.1.0.min.js"></script>
+<script src="assets/js/lib/common.js"></script>
+<script src="assets/js/control.js"></script>
 </body>
 </html>

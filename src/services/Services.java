@@ -196,7 +196,7 @@ public class Services {
 
     /**
      * 查询在线设备列表
-     * @param userSessionID 用户session id
+     * @param userSessionID 用户session id 用于验证
      * @return 设备信息列表
      */
     //query online devices
