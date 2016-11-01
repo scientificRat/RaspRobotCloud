@@ -22,7 +22,7 @@ $(document).ready(function() {
     });
 
     var videoPanel =$("#video");
-    videoPanel.attr("src",window.location.hostname + ":8999/?mj=" +sessionID+","+connectionDeviceID);
+    videoPanel.attr("src","http://"+window.location.hostname + ":8999/?mj=" +sessionID+","+connectionDeviceID);
     videoPanel.fadeIn();
 
 });

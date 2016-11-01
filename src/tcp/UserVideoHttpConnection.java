@@ -120,7 +120,7 @@ public class UserVideoHttpConnection extends TCPConnection implements UserConnec
             e.printStackTrace();
             Services services =Services.getInstance();
             try {
-                services.userLogout("http");
+                services.stopUserForwarding(this);
             } catch (TCPServicesException e1) {
                 e1.printStackTrace();
             }

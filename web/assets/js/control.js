@@ -35,7 +35,7 @@ $(document).ready(function () {
     //连接设备按钮
     $("#connectDevice").click(function () {
         if(selectedDeviceID!=null){
-            window.location= "deviceConnection.html?sessionID="+sessionID+"&connectionDeviceID"+ selectedDeviceID;
+            window.open("deviceConnection.html?sessionID="+sessionID+"&connectionDeviceID="+ selectedDeviceID);
         }
         else {
             alert("请先选择设备")

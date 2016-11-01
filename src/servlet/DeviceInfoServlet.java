@@ -58,7 +58,14 @@ public class DeviceInfoServlet extends HttpServlet{
                 ArrayList<DeviceInfo> deviceInfoArrayList=raspDevicesRepository.queryAll();
                 //设置设备是否在线信息
                 deviceInfoArrayList.forEach(deviceInfo -> {
-                    if(onlineDevices.contains(deviceInfo)){
+                    boolean contained =false;
+                    for (int i = 0; i < onlineDevices.size(); i++) {
+                        if (onlineDevices.get(i).getDeviceID().equals(deviceInfo.getDeviceID())){
+                            contained =true;
+                            break;
+                        }
+                    }
+                    if(contained){
                         deviceInfo.setOnline(true);
                     }
                     else {
