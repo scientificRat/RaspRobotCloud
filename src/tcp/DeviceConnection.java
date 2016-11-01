@@ -6,6 +6,8 @@ import exceptions.TCPServicesException;
 import services.Services;
 import utility.GeneralJsonBuilder;
 
+import java.net.SocketException;
+
 /**
  * Created by huangzhengyue on 27/09/2016.
  */
@@ -57,7 +59,11 @@ public class DeviceConnection extends SelfDefinedProtocolConnection {
                 break;
             }
             case 'v':{
-                Services.getInstance().deviceToUserForwarding(this,dataHead,data);
+                try {
+                    Services.getInstance().deviceToUserForwarding(this,dataHead,data);
+                }catch (SocketException e){
+                    e.printStackTrace();
+                }
                 break;
             }
             default:{

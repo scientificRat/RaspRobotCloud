@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.SocketException;
 import java.util.ArrayList;
 
 /**
@@ -167,7 +168,12 @@ public class UserNonBrowserClientConnection extends SelfDefinedProtocolConnectio
             }
             case 'c': {
                 // 转发命令
-                services.userToDeviceForwarding(this, dataHead, data);
+
+                try {
+                    services.userToDeviceForwarding(this, dataHead, data);
+                } catch (SocketException e) {
+                    e.printStackTrace();
+                }
                 break;
             }
             default: {

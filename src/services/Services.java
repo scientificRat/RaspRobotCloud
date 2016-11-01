@@ -14,6 +14,7 @@ import tcp.UserNonBrowserClientConnection;
 import utility.DBHelper;
 import utility.UniqueIdGenerator;
 
+import java.net.SocketException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -287,7 +288,7 @@ public class Services {
      *    转发   用户--->设备
      * */
 
-    public void userToDeviceForwarding(UserConnection userConnection, byte[] head, byte[] data){
+    public void userToDeviceForwarding(UserConnection userConnection, byte[] head, byte[] data) throws SocketException{
         TCPConnection destinationConnection = userConnectionForwardingTable.get(userConnection).forwardingToConnection;
         byte[] sendData = new byte[head.length+data.length];
         System.arraycopy(head,0,sendData,0,head.length);
@@ -299,14 +300,14 @@ public class Services {
      *
      *    转发   设备--->用户
      * */
-    public void deviceToUserForwarding(DeviceConnection deviceConnection,byte[] head,byte[] data){
+    public void deviceToUserForwarding(DeviceConnection deviceConnection,byte[] head,byte[] data) throws SocketException{
         byte[] sendData = new byte[head.length+data.length];
         System.arraycopy(head,0,sendData,0,head.length);
         System.arraycopy(data,0,sendData,head.length,data.length);
         ArrayList<UserConnection> destinationConnectionArrayList = onlineDevicesTable.get(deviceConnection).forwardingConnections;
-        destinationConnectionArrayList.forEach(connection->{
-            connection.sendForwardingData(sendData);
-        });
+        for (int i = 0; i < destinationConnectionArrayList.size(); i++) {
+            destinationConnectionArrayList.get(i).sendForwardingData(sendData);
+        }
     }
 
 }
