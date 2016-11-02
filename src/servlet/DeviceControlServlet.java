@@ -26,10 +26,11 @@ public class DeviceControlServlet extends HttpServlet {
         PrintWriter out = resp.getWriter();
         String userName = (String) req.getSession().getAttribute("userName");
         String sessionID = (String) req.getSession().getAttribute("sessionID");
-        String requestedDeviceID = (String) req.getSession().getAttribute("requestedDeviceID");
+        String requestedDeviceID = req.getParameter("requestedDeviceID");
 
         if(requestedDeviceID==null||requestedDeviceID.isEmpty()){
             out.print(GeneralJsonBuilder.error("parameter requestedDeviceID is required"));
+            return;
         }
         // x y偏移量
         float offsetX = 0;
@@ -40,6 +41,7 @@ public class DeviceControlServlet extends HttpServlet {
         }catch (NumberFormatException ne){
             ne.printStackTrace();
             out.print(GeneralJsonBuilder.error("parameter offsetX or offsetY is wrong or missed\n"+ne.toString()));
+            return;
         }
         //check login
         if(userName==null || userName.isEmpty()){
@@ -54,6 +56,7 @@ public class DeviceControlServlet extends HttpServlet {
         } catch (TCPServicesException e){
             e.printStackTrace();
             out.print(GeneralJsonBuilder.error(e.toString()));
+            return;
         }
 
     }

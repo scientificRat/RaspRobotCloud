@@ -30,8 +30,8 @@ public abstract class SelfDefinedProtocolConnection extends TCPConnection {
                     }
                     head[i] = (byte) c;
                 }
-                //读到头部，开始设定超时，每个byte必须在0.5s内传完
-                this.socket.setSoTimeout(500);
+                //读到头部，开始设定超时，每个byte必须在1s内传完
+                this.socket.setSoTimeout(1000);
                 int dataLength = byteToInt(head, 1);
                 byte[] data = new byte[dataLength];
                 for (int i = 0; i < dataLength; i++) {

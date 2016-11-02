@@ -63,7 +63,7 @@ public class LaunchServlet extends HttpServlet {
             } else if (deviceServer != null && userServer != null && videoServer != null) {
                 out.print(GeneralJsonBuilder.error("已经开启，不能再次开启"));
             } else {
-                out.print(GeneralJsonBuilder.error("fatal error detected!! 请重启服务器"));
+                out.print(GeneralJsonBuilder.error("fatal error detected!! 请重启tomcat服务器"));
             }
         } else {
             out.print(GeneralJsonBuilder.error("parameter action is wrong"));
