@@ -22,59 +22,38 @@ import java.util.ArrayList;
  * Created by huangzhengyue on 2016/10/31.
  */
 @WebServlet("/servlet/deviceInfo")
-public class DeviceInfoServlet extends HttpServlet{
+public class DeviceInfoServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setCharacterEncoding("UTF-8");
         resp.setCharacterEncoding("UTF-8");
         resp.setContentType("application/json");
-        PrintWriter out=resp.getWriter();
+        PrintWriter out = resp.getWriter();
         String userName = (String) req.getSession().getAttribute("userName");
         String sessionID = (String) req.getSession().getAttribute("sessionID");
 
         //check login
-        if(userName==null || userName.isEmpty()){
+        if (userName == null || userName.isEmpty()) {
             out.print(GeneralJsonBuilder.error("not login"));
             return;
         }
         String type = req.getParameter("type");
-        if(type==null || type.isEmpty()){
+        if (type == null || type.isEmpty()) {
             out.print(GeneralJsonBuilder.error("parameter type is required"));
             return;
         }
-        Gson gson= new Gson();
-        if(type.equals("queryOnlineDeviceList")){
+        Gson gson = new Gson();
+        if (type.equals("queryOnlineDeviceList")) {
             Services services = Services.getInstance();
             out.print(gson.toJson(services.queryOnlineDevices(sessionID)));
-        }
-        else if(type.equals("queryAll")){
+        } else if (type.equals("queryAll")) {
             //查询在线设备
             Services services = Services.getInstance();
-            ArrayList<DeviceInfo> onlineDevices = services.queryOnlineDevices(sessionID);
-            //查询数据库(all devices)
-            Connection dbConnection = DBHelper.getDBConnection();
-            RaspDevicesRepository raspDevicesRepository = new RaspDevicesRepository(dbConnection);
+            ArrayList<DeviceInfo> deviceInfoArrayList= null;
             try {
-                ArrayList<DeviceInfo> deviceInfoArrayList=raspDevicesRepository.queryAll();
-                //设置设备是否在线信息
-                deviceInfoArrayList.forEach(deviceInfo -> {
-                    boolean contained =false;
-                    for (int i = 0; i < onlineDevices.size(); i++) {
-                        if (onlineDevices.get(i).getDeviceID().equals(deviceInfo.getDeviceID())){
-                            contained =true;
-                            break;
-                        }
-                    }
-                    if(contained){
-                        deviceInfo.setOnline(true);
-                    }
-                    else {
-                        deviceInfo.setOnline(false);
-                    }
-                });
+                deviceInfoArrayList = services.queryAllDevices(sessionID);
                 //response
                 out.print(gson.toJson(deviceInfoArrayList));
-
             } catch (SQLException e) {
                 e.printStackTrace();
                 out.print(GeneralJsonBuilder.error(e.toString()));
@@ -82,4 +61,5 @@ public class DeviceInfoServlet extends HttpServlet{
         }
 
     }
+
 }

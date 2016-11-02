@@ -12,6 +12,7 @@ import tcp.TCPConnection;
 import tcp.UserConnection;
 import tcp.UserNonBrowserClientConnection;
 import utility.DBHelper;
+import utility.GeneralJsonBuilder;
 import utility.UniqueIdGenerator;
 
 import java.net.SocketException;
@@ -217,6 +218,36 @@ public class Services {
             deviceInfoArrayList.add(deviceInfo);
         });
 
+        return deviceInfoArrayList;
+    }
+
+    /**
+     * 查询所有设备列表
+     * @param userSessionID 用户session id 用于验证
+     * @return 所有设备信息列表，包含其是否在线
+     */
+    public ArrayList<DeviceInfo> queryAllDevices(String userSessionID) throws SQLException {
+        ArrayList<DeviceInfo> onlineDevices = queryOnlineDevices(userSessionID);
+        //查询数据库(all devices)
+        Connection dbConnection = DBHelper.getDBConnection();
+        RaspDevicesRepository raspDevicesRepository = new RaspDevicesRepository(dbConnection);
+        ArrayList<DeviceInfo> deviceInfoArrayList=raspDevicesRepository.queryAll();
+        //设置设备是否在线信息
+        deviceInfoArrayList.forEach(deviceInfo -> {
+            boolean contained =false;
+            for (int i = 0; i < onlineDevices.size(); i++) {
+                if (onlineDevices.get(i).getDeviceID().equals(deviceInfo.getDeviceID())){
+                    contained =true;
+                    break;
+                }
+            }
+            if(contained){
+                deviceInfo.setOnline(true);
+            }
+            else {
+                deviceInfo.setOnline(false);
+            }
+        });
         return deviceInfoArrayList;
     }
 

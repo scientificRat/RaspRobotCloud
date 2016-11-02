@@ -13,6 +13,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.SocketException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 /**
@@ -155,12 +156,19 @@ public class UserNonBrowserClientConnection extends SelfDefinedProtocolConnectio
                         deviceInfoArrayList.add(deviceInfo);
                         deviceInfo.setDeviceID("fucker");
                         deviceInfo.setHardwareDescription("测试");
+                        deviceInfo.setOnline(true);
                         deviceInfoArrayList.add(deviceInfo);
                         sendStringData(gson.toJson(deviceInfoArrayList));
                         return;
                     }
                     //返回在线设备列表
-                    sendStringData(gson.toJson(Services.getInstance().queryOnlineDevices(sessionID)));
+                    try {
+                        sendStringData(gson.toJson(Services.getInstance().queryAllDevices(sessionID)));
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                        sendStringData(GeneralJsonBuilder.error(e.toString()));
+                    }
+
                 } else {
                     sendStringData(GeneralJsonBuilder.error("You are silly B, parameter requestType is required,[login/logout/detach/connect/query]"));
                 }
