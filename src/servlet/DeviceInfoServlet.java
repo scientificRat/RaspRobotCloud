@@ -1,10 +1,8 @@
 package servlet;
 
 import com.google.gson.Gson;
-import dao.RaspDevicesRepository;
 import datastruct.dataobj.DeviceInfo;
 import services.Services;
-import utility.DBHelper;
 import utility.GeneralJsonBuilder;
 
 import javax.servlet.ServletException;
@@ -14,7 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -49,7 +46,7 @@ public class DeviceInfoServlet extends HttpServlet {
         } else if (type.equals("queryAll")) {
             //查询在线设备
             Services services = Services.getInstance();
-            ArrayList<DeviceInfo> deviceInfoArrayList= null;
+            ArrayList<DeviceInfo> deviceInfoArrayList;
             try {
                 deviceInfoArrayList = services.queryAllDevices(sessionID);
                 //response
