@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>注册设备</title>
+    <link rel="stylesheet" href="assets/css/amazeui.min.css">
+    <link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body class="colorfulBack">
+<div class="am-vertical-align" style="height: 100vh; text-align: center">
+    <div class="am-vertical-align-middle login_main am-animation-fade">
+        <div>
+            <h1><a href="index.html">搜救机器人平台</a></h1>
+            <p>-管理人员专用页面-</p>
+        </div>
+        <div class="am-tabs-bd" style="border: none">
+            <form id="message-verify-form" class="am-padding-0 am-text-left am-tab-panel am-active">
+                <div class="am-g am-g-collapse am-margin-bottom-xs">
+                    <div class="am-u-sm-4">
+                        <label>管理员手机:</label>
+                    </div>
+                    <div class="am-u-sm-8 am-form-icon am-form-feedback">
+                        <input name="phone" id="phone" placeholder="仅管理员手机有效" type="text">
+                    </div>
+                </div>
+                <div class="am-g am-g-collapse am-margin-bottom-xs">
+                    <div class="am-u-md-4 am-u-sm-4">
+                        <label>验证码:</label>
+                    </div>
+                    <div class="am-u-md-3 am-u-sm-8">
+                        <input name="shortMessage" id="verifyingCode" type="text">
+                    </div>
+                    <div class="am-u-md-5">
+                        <div class="am-padding-left-xs">
+                            <a id="send_message_button" class="relief_button">发送验证短信</a>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+            <form id="new-device-form"  class="am-tab-panel am-padding-0 am-text-left">
+                <div class="am-g am-g-collapse am-margin-bottom-xs">
+                    <div class="am-u-sm-4">
+                        <label>新设备名:</label>
+                    </div>
+                    <div class="am-u-sm-8">
+                        <input id="newDeviceID" placeholder="deviceID" name="newDeviceID" type="text">
+                    </div>
+                </div>
+                <div class="am-g am-g-collapse am-margin-bottom-xs">
+                    <div class="am-u-sm-4">
+                        <label>密码:</label>
+                    </div>
+                    <div class="am-u-sm-8">
+                        <input id="password" placeholder="密码" name="password" type="password">
+                    </div>
+                </div>
+                <div class="am-g am-g-collapse am-margin-bottom-xs">
+                    <div class="am-u-sm-4">
+                        <label>确认:</label>
+                    </div>
+                    <div class="am-u-sm-8">
+                        <input id="repeatPassword" placeholder="再输一次" type="password">
+                    </div>
+                </div>
+            </form>
+
+            <div id="success" class="am-tab-panel am-padding-0 am-text-left">
+                <div class="big-text am-margin-bottom-sm">
+                    <i class="am-icon-check-circle"></i>添加成功
+                </div>
+            </div>
+            <a id="next-button" class="submit_button">下一步</a>
+        </div>
+    </div>
+</div>
+
+<script src="assets/js/lib/jquery-3.1.0.min.js"></script>
+<script src="assets/js/lib/common.js"></script>
+<script src="assets/js/deviceSignUp.js"></script>
+</body>
+</html>

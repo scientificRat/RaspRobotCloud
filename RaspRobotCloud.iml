@@ -30,5 +30,14 @@
     </orderEntry>
     <orderEntry type="library" exported="" scope="PROVIDED" name="Tomcat 9.0.0.M8" level="application_server_libraries" />
     <orderEntry type="library" exported="" name="com.google.code.gson:gson:2.7" level="project" />
+    <orderEntry type="module-library" exported="">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/sdk-java-dayu/taobao-sdk-java-auto_shortMessage.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
   </component>
 </module>

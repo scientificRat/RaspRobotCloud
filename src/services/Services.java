@@ -143,30 +143,25 @@ public class Services {
 
     /***********
      *
-     *   用户下线
+     *   用户下线 需要用session ID
      *
      * */
     public void userLogout(String sessionID) throws TCPServicesException{
         try {
             //删除 用户在线表
             onlineUserTable.remove(sessionID);
-            userConnectionForwardingTable.forEach(((userConnection, forwardingTableCols) -> {
-                if(forwardingTableCols.userSessionID.equals(sessionID)){
-                    //删除 设备-->用户转发规则
-                    onlineDevicesTable.forEach(((deviceConnection, onlineDeviceInfo) -> {
-                        onlineDeviceInfo.forwardingConnections.removeIf(userConnection1 -> {
-                            if(userConnection==userConnection1){
-                                return true;
-                            }
-                            else {
-                                return false;
-                            }
-                        });
-                    }));
-                    //删除 用户-->设备转发规则
-                    userConnectionForwardingTable.remove(userConnection);
+            //找到这个sessionID对应的连接
+            UserConnection userConnection = null;
+            for (Map.Entry<UserConnection,ForwardingTableCols> pair:userConnectionForwardingTable.entrySet()) {
+                if (pair.getValue().userSessionID.equals(sessionID)){
+                    userConnection = pair.getKey();
+                    break;
                 }
-            }));
+            }
+            if(userConnection ==null){
+                throw new TCPServicesException("no such user");
+            }
+            stopUserForwarding(userConnection);
         }catch (NullPointerException e){
             throw new TCPServicesException("no such user(null pointer)\n"+e.toString());
         }
@@ -189,11 +184,14 @@ public class Services {
                         return false;
                     }
                 });
+                if(onlineDeviceInfo.forwardingConnections.isEmpty()){
+                    //告知设备关闭视频
+                    deviceConnection.sendStringData("{\"action\":\"stopVideo\"}");
+                }
             });
 
             //删除 用户-->设备转发规则
             userConnectionForwardingTable.remove(userConnection);
-
 
         }catch (NullPointerException e){
             throw new TCPServicesException("no such user(null pointer)\n"+e.toString());

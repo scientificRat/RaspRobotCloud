@@ -703,4 +703,46 @@ a.go_back:hover{
     vertical-align: middle;
 }
 
+.login_main{
+    background: #ffffff;
+    padding: 40px;
+    width: 440px;
+}
 
+
+
+.submit_button {
+    height: 2em;
+    padding: 2px;
+    font-size: 1em;
+    color: #61686b;
+    letter-spacing: 0.25em;
+    margin-left: 0px;
+    border-radius: 1px;
+    background-color: rgba(144, 144, 144, 0.15);
+    border: 1px solid #aaa;
+    width: 100%;
+    position: relative;
+    text-align: center;
+    transform: translateZ(0);
+    display: inline-block;
+    box-sizing: border-box;
+}
+
+.submit_button:after {
+    content: " ";
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    background: #fff;
+    transform: scaleX(0);
+    transition: transform 0.2s ease-in;
+    z-index: -1;
+}
+
+.submit_button:hover:after {
+    background-color: #fff;
+    transform: scaleX(1);
+}
