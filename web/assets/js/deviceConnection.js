@@ -31,7 +31,7 @@ function sendMovementCommand(deviceID, offsetX, offsetY) {
     $.ajax({
         url: "/servlet/deviceControl",
         type: "POST",
-        data: {offsetX: offsetX, offsetY: offsetY, requestedDeviceID: deviceID},
+        data: {type: "movement", offsetX: offsetX, offsetY: offsetY, requestedDeviceID: deviceID},
         success: function (feedback) {
             if (feedback.success) {
 

@@ -1,4 +1,5 @@
-var url = "http://192.168.1.128:8080/?action=imageCommand";
+var connectionDeviceID = getQueryString("connectionDeviceID");
+var sessionID = getQueryString("sessionID");
 
 $(document).ready(function() {
     "use strict";
@@ -273,17 +274,36 @@ $(document).ready(function() {
 
     $("#submitButton").click(function() {
         var ImageValue = new Object();
-        ImageValue.BRIGHTNESS = parseInt($("#brightness").val()) ;
-        ImageValue.CONTRAST = parseInt($("#contrast").val());
-        ImageValue.SATURATION = parseInt($("#saturation").val());
+        ImageValue.brightness = parseInt($("#brightness").val()) ;
+        ImageValue.constract = parseInt($("#contrast").val());
+        ImageValue.saturation= parseInt($("#saturation").val());
         //ImageValue.WIDTH = parseInt($("#width").val());
-        ImageValue.WIDTH = 320;
+        ImageValue.width = 320;
         //ImageValue.HEIGHT = parseInt($("#height").val());
-        ImageValue.HEIGHT = 240;
-        var ImageJson = JSON.stringify(ImageValue);
+        ImageValue.heiht = 240;
+        ImageValue.action = "configuration";
+        var commandJson = JSON.stringify(ImageValue);
         //alert(ImageJson);
-
-        $.get(url,ImageJson);
+        $.ajax({
+            type: "POST",
+            url:"/servlet/deviceControl",
+            data:{type:"configure",commandJson: commandJson, requestedDeviceID: connectionDeviceID},
+            success:function (feedback) {
+                if(feedback.error){
+                    alert(feedback.error);
+                    return;
+                }
+                else if (feedback.success){
+                    alert("设置成功");
+                }
+                else {
+                    alert("bug-detected, please checkout the source code");
+                }
+            },
+            error:function () {
+                alert("网络连接不佳")
+            }
+        })
     });
 
 });

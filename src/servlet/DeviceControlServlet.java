@@ -14,7 +14,7 @@ import java.io.PrintWriter;
 
 /**
  * Created by huangzhengyue on 2016/11/1.
- * 本servlet用于向设备直接发送运动控制指令
+ * 本servlet用于向设备直接发送控制指令
  */
 @WebServlet("/servlet/deviceControl")
 public class DeviceControlServlet extends HttpServlet {
@@ -28,34 +28,60 @@ public class DeviceControlServlet extends HttpServlet {
         String sessionID = (String) req.getSession().getAttribute("sessionID");
         String requestedDeviceID = req.getParameter("requestedDeviceID");
 
-        if(requestedDeviceID==null||requestedDeviceID.isEmpty()){
+        String type = req.getParameter("type");
+        if (type == null || type.isEmpty()) {
+            out.print(GeneralJsonBuilder.error("parameter type is required"));
+            return;
+        }
+        if (requestedDeviceID == null || requestedDeviceID.isEmpty()) {
             out.print(GeneralJsonBuilder.error("parameter requestedDeviceID is required"));
             return;
         }
-        // x y偏移量
-        float offsetX = 0;
-        float offsetY = 0;
-        try {
-            offsetX = Float.parseFloat(req.getParameter("offsetX"));
-            offsetY = Float.parseFloat(req.getParameter("offsetY"));
-        }catch (NumberFormatException ne){
-            ne.printStackTrace();
-            out.print(GeneralJsonBuilder.error("parameter offsetX or offsetY is wrong or missed\n"+ne.toString()));
-            return;
-        }
-        //check login
-        if(userName==null || userName.isEmpty()){
-            out.print(GeneralJsonBuilder.error("not login"));
-            return;
-        }
+        if (type.equals("movement")) {
+            // x y偏移量
+            float offsetX = 0;
+            float offsetY = 0;
+            try {
+                offsetX = Float.parseFloat(req.getParameter("offsetX"));
+                offsetY = Float.parseFloat(req.getParameter("offsetY"));
+            } catch (NumberFormatException ne) {
+                ne.printStackTrace();
+                out.print(GeneralJsonBuilder.error("parameter offsetX or offsetY is wrong or missed\n" + ne.toString()));
+                return;
+            }
+            //check login
+            if (userName == null || userName.isEmpty()) {
+                out.print(GeneralJsonBuilder.error("not login"));
+                return;
+            }
 
-        Services services = Services.getInstance();
-        try{
-            services.sendDeviceMovementCommand(requestedDeviceID,offsetX,offsetY);
-            out.print(GeneralJsonBuilder.succuss(true));
-        } catch (TCPServicesException e){
-            e.printStackTrace();
-            out.print(GeneralJsonBuilder.error(e.toString()));
+            Services services = Services.getInstance();
+            try {
+                services.sendDeviceMovementCommand(requestedDeviceID, offsetX, offsetY);
+                out.print(GeneralJsonBuilder.succuss(true));
+            } catch (TCPServicesException e) {
+                e.printStackTrace();
+                out.print(GeneralJsonBuilder.error(e.toString()));
+                return;
+            }
+        } else if (type.equals("configure")) {
+            String commandJson = req.getParameter("commandJson");
+            if (commandJson == null || commandJson.isEmpty()) {
+                out.print(GeneralJsonBuilder.error("parameter commandJson is required"));
+                return;
+            }
+            Services services = Services.getInstance();
+            try {
+                services.sendDeviceJsonData(requestedDeviceID,commandJson);
+                out.print(GeneralJsonBuilder.succuss(true));
+            } catch (TCPServicesException e) {
+                e.printStackTrace();
+                out.print(GeneralJsonBuilder.error(e.toString()));
+                return;
+            }
+
+        } else {
+            out.print(GeneralJsonBuilder.error("type not defined"));
             return;
         }
 

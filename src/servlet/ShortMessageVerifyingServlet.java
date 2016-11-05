@@ -79,10 +79,10 @@ public class ShortMessageVerifyingServlet extends HttpServlet {
             req.getSession().setAttribute("verified", false);
             req.getSession().removeAttribute("shortMessageVerifyingCodeInServer");
             out.print(GeneralJsonBuilder.succuss(true));
-
         }
-
+        else {
+            out.print(GeneralJsonBuilder.error("type not defined"));
+            return;
+        }
     }
-
-
 }

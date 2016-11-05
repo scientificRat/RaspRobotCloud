@@ -58,27 +58,27 @@ public class Services {
      *   (设备登录不同于用户登录，设备登录会保持连接，用户登录不会保持连接（这个函数不会体现这些操作，但其它地方处理要注意）
      *
      * */
-    public void deviceLogin(String deviceID, String password, DeviceConnection deviceConnection) throws TCPServicesException{
+    public void deviceLogin(String deviceID, String password, DeviceConnection deviceConnection) throws TCPServicesException {
         //验证密码
-        Connection dbConnection= DBHelper.getDBConnection();
+        Connection dbConnection = DBHelper.getDBConnection();
         RaspDevicesRepository raspDevicesRepository = new RaspDevicesRepository(dbConnection);
         boolean exist;
         try {
-            exist = raspDevicesRepository.queryExist(deviceID,password);
+            exist = raspDevicesRepository.queryExist(deviceID, password);
         } catch (SQLException e) {
             e.printStackTrace();
-            throw new TCPServicesException("sql exception"+e.toString());
+            throw new TCPServicesException("sql exception" + e.toString());
         }
-        if(!exist){
+        if (!exist) {
             throw new TCPServicesException("deviceID or password error");
         }
         //插入在线设备表
-        onlineDevicesTable.put(deviceConnection,new OnlineDeviceInfo(deviceID));
+        onlineDevicesTable.put(deviceConnection, new OnlineDeviceInfo(deviceID));
     }
 
     /**
      * 用户登录
-     *
+     * <p>
      * (设备登录不同于用户登录，设备登录会保持连接，用户登录不会保持连接（这个函数不会体现这些操作，但其它地方处理要注意）
      *
      * @param userName 用户名
@@ -89,27 +89,28 @@ public class Services {
 
     public String userLogin(String userName, String password) throws TCPServicesException {
         //验证密码
-        Connection dbConnection= DBHelper.getDBConnection();
+        Connection dbConnection = DBHelper.getDBConnection();
         UsersRepository usersRepository = new UsersRepository(dbConnection);
         boolean exist;
         try {
             exist = usersRepository.queryExist(userName, password);
         } catch (SQLException e) {
             e.printStackTrace();
-            throw new TCPServicesException("sql exception"+e.toString());
+            throw new TCPServicesException("sql exception" + e.toString());
         }
-        if(!exist){
+        if (!exist) {
             throw new TCPServicesException("userName or password error");
         }
         //generate sessionID
         String sessionID = UniqueIdGenerator.generate();
         //插入在线用户表
-        onlineUserTable.put(sessionID,new OnlineUser(userName));
+        onlineUserTable.put(sessionID, new OnlineUser(userName));
         return sessionID;
     }
 
     /**
      * 用户名直接登录,仅用于可信用户（比如已经通过http登录的用户）
+     *
      * @param userName 用户名
      * @return 该连接的sessionID
      */
@@ -117,27 +118,28 @@ public class Services {
         //generate sessionID
         String sessionID = UniqueIdGenerator.generate();
         //插入在线用户表
-        onlineUserTable.put(sessionID,new OnlineUser(userName));
+        onlineUserTable.put(sessionID, new OnlineUser(userName));
         return sessionID;
     }
 
 
     /**
      * 设备下线
+     *
      * @param deviceConnection 设备连接
      * @throws TCPServicesException
      */
-    public void deviceLogout(DeviceConnection deviceConnection) throws TCPServicesException{
+    public void deviceLogout(DeviceConnection deviceConnection) throws TCPServicesException {
         try {
             //如果设备已连用户端接则断开用户连接
-            ArrayList<UserConnection> connectionArrayList=onlineDevicesTable.get(deviceConnection).forwardingConnections;
-            connectionArrayList.forEach(userConnection->{
+            ArrayList<UserConnection> connectionArrayList = onlineDevicesTable.get(deviceConnection).forwardingConnections;
+            connectionArrayList.forEach(userConnection -> {
                 userConnection.closeConnection();
                 userConnectionForwardingTable.remove(userConnection);
             });
             onlineDevicesTable.remove(deviceConnection);
-        }catch (NullPointerException e){
-            throw new TCPServicesException("no such device(null pointer)\n"+e.toString());
+        } catch (NullPointerException e) {
+            throw new TCPServicesException("no such device(null pointer)\n" + e.toString());
         }
     }
 
@@ -146,45 +148,44 @@ public class Services {
      *   用户下线 需要用session ID
      *
      * */
-    public void userLogout(String sessionID) throws TCPServicesException{
+    public void userLogout(String sessionID) throws TCPServicesException {
         try {
-            //删除 用户在线表
-            onlineUserTable.remove(sessionID);
             //找到这个sessionID对应的连接
             UserConnection userConnection = null;
-            for (Map.Entry<UserConnection,ForwardingTableCols> pair:userConnectionForwardingTable.entrySet()) {
-                if (pair.getValue().userSessionID.equals(sessionID)){
+            for (Map.Entry<UserConnection, ForwardingTableCols> pair : userConnectionForwardingTable.entrySet()) {
+                if (pair.getValue().userSessionID.equals(sessionID)) {
                     userConnection = pair.getKey();
                     break;
                 }
             }
-            if(userConnection ==null){
-                throw new TCPServicesException("no such user");
+            if (userConnection != null) {
+                stopUserForwarding(userConnection);
             }
-            stopUserForwarding(userConnection);
-        }catch (NullPointerException e){
-            throw new TCPServicesException("no such user(null pointer)\n"+e.toString());
+            //删除 用户在线表
+            onlineUserTable.remove(sessionID);
+        } catch (NullPointerException e) {
+            throw new TCPServicesException("no such user(null pointer)\n" + e.toString());
         }
     }
 
     /**
      * 停止某个用户转发 （用于处理用户连接突然断开，但是没有退出登录）
+     *
      * @param userConnection
      * @throws TCPServicesException
      */
-    public void stopUserForwarding(UserConnection userConnection) throws TCPServicesException{
+    public void stopUserForwarding(UserConnection userConnection) throws TCPServicesException {
         try {
             //删除 设备-->用户转发规则
             onlineDevicesTable.forEach((deviceConnection, onlineDeviceInfo) -> {
                 onlineDeviceInfo.forwardingConnections.removeIf(userConnection1 -> {
-                    if(userConnection==userConnection1){
+                    if (userConnection == userConnection1) {
                         return true;
-                    }
-                    else {
+                    } else {
                         return false;
                     }
                 });
-                if(onlineDeviceInfo.forwardingConnections.isEmpty()){
+                if (onlineDeviceInfo.forwardingConnections.isEmpty()) {
                     //告知设备关闭视频
                     deviceConnection.sendStringData("{\"action\":\"stopVideo\"}");
                 }
@@ -193,13 +194,14 @@ public class Services {
             //删除 用户-->设备转发规则
             userConnectionForwardingTable.remove(userConnection);
 
-        }catch (NullPointerException e){
-            throw new TCPServicesException("no such user(null pointer)\n"+e.toString());
+        } catch (NullPointerException e) {
+            throw new TCPServicesException("no such user(null pointer)\n" + e.toString());
         }
     }
 
     /**
      * 查询在线设备列表
+     *
      * @param userSessionID 用户session id 用于验证
      * @return 设备信息列表
      */
@@ -221,6 +223,7 @@ public class Services {
 
     /**
      * 查询所有设备列表
+     *
      * @param userSessionID 用户session id 用于验证
      * @return 所有设备信息列表，包含其是否在线
      */
@@ -229,20 +232,19 @@ public class Services {
         //查询数据库(all devices)
         Connection dbConnection = DBHelper.getDBConnection();
         RaspDevicesRepository raspDevicesRepository = new RaspDevicesRepository(dbConnection);
-        ArrayList<DeviceInfo> deviceInfoArrayList=raspDevicesRepository.queryAll();
+        ArrayList<DeviceInfo> deviceInfoArrayList = raspDevicesRepository.queryAll();
         //设置设备是否在线信息
         deviceInfoArrayList.forEach(deviceInfo -> {
-            boolean contained =false;
+            boolean contained = false;
             for (int i = 0; i < onlineDevices.size(); i++) {
-                if (onlineDevices.get(i).getDeviceID().equals(deviceInfo.getDeviceID())){
-                    contained =true;
+                if (onlineDevices.get(i).getDeviceID().equals(deviceInfo.getDeviceID())) {
+                    contained = true;
                     break;
                 }
             }
-            if(contained){
+            if (contained) {
                 deviceInfo.setOnline(true);
-            }
-            else {
+            } else {
                 deviceInfo.setOnline(false);
             }
         });
@@ -252,35 +254,36 @@ public class Services {
 
     /**
      * 请求连接设备
+     *
      * @param userSessionID
      * @param deviceID
      * @param userConnection
      * @throws TCPServicesException
      */
-    public void connectDevice(String userSessionID, String deviceID, UserConnection userConnection) throws TCPServicesException{
+    public void connectDevice(String userSessionID, String deviceID, UserConnection userConnection) throws TCPServicesException {
         //check online
-        if(!onlineUserTable.containsKey(userSessionID) && !userSessionID.equals("http")){
+        if (!onlineUserTable.containsKey(userSessionID) && !userSessionID.equals("http")) {
             throw new TCPServicesException("user not login");
         }
 
-        OnlineDeviceInfo onlineDevice =null;
+        OnlineDeviceInfo onlineDevice = null;
         DeviceConnection deviceConnection = null;
-        for (DeviceConnection connection: onlineDevicesTable.keySet()) {
-            if(onlineDevicesTable.get(connection).deviceID.equals(deviceID)){
+        for (DeviceConnection connection : onlineDevicesTable.keySet()) {
+            if (onlineDevicesTable.get(connection).deviceID.equals(deviceID)) {
                 onlineDevice = onlineDevicesTable.get(connection);
                 deviceConnection = connection;
                 break;
             }
         }
-        if(onlineDevice==null){
+        if (onlineDevice == null) {
             throw new TCPServicesException(("device not online"));
         }
-        try{
+        try {
             //加入两个转发表
             onlineDevice.forwardingConnections.add(userConnection);
-            userConnectionForwardingTable.put(userConnection,new ForwardingTableCols(deviceConnection,userSessionID));
-        }catch (NullPointerException e){
-            throw new TCPServicesException("device not online (null pointer exception)\n"+e.toString());
+            userConnectionForwardingTable.put(userConnection, new ForwardingTableCols(deviceConnection, userSessionID));
+        } catch (NullPointerException e) {
+            throw new TCPServicesException("device not online (null pointer exception)\n" + e.toString());
         }
         //告知设备发送视频
         deviceConnection.sendStringData("{\"action\":\"startVideo\"}");
@@ -288,6 +291,7 @@ public class Services {
 
     /**
      * 用户断开设备连接
+     *
      * @param userSessionID
      * @param deviceID
      * @param userConnection
@@ -295,23 +299,23 @@ public class Services {
      */
     public void detachDevice(String userSessionID, String deviceID, UserNonBrowserClientConnection userConnection) throws TCPServicesException {
         //check online
-        if(!onlineUserTable.containsKey(userSessionID)){
+        if (!onlineUserTable.containsKey(userSessionID)) {
             throw new TCPServicesException("user not login");
         }
-        OnlineDeviceInfo onlineDevice =null;
-        for (DeviceConnection connection: onlineDevicesTable.keySet()) {
-            if(onlineDevicesTable.get(connection).deviceID.equals(deviceID)){
+        OnlineDeviceInfo onlineDevice = null;
+        for (DeviceConnection connection : onlineDevicesTable.keySet()) {
+            if (onlineDevicesTable.get(connection).deviceID.equals(deviceID)) {
                 onlineDevice = onlineDevicesTable.get(connection);
                 break;
             }
         }
-        if(onlineDevice==null){
+        if (onlineDevice == null) {
             throw new TCPServicesException(("device not online"));
         }
         try {
             onlineDevice.forwardingConnections.remove(userConnection);
             userConnectionForwardingTable.remove(userConnection);
-        }catch (NullPointerException e){
+        } catch (NullPointerException e) {
             throw new TCPServicesException(e.toString());
         }
     }
@@ -321,11 +325,11 @@ public class Services {
      *    转发   用户--->设备
      * */
 
-    public void userToDeviceForwarding(UserConnection userConnection, byte[] head, byte[] data) throws SocketException{
+    public void userToDeviceForwarding(UserConnection userConnection, byte[] head, byte[] data) throws SocketException {
         TCPConnection destinationConnection = userConnectionForwardingTable.get(userConnection).forwardingToConnection;
-        byte[] sendData = new byte[head.length+data.length];
-        System.arraycopy(head,0,sendData,0,head.length);
-        System.arraycopy(data,0,sendData,head.length,data.length);
+        byte[] sendData = new byte[head.length + data.length];
+        System.arraycopy(head, 0, sendData, 0, head.length);
+        System.arraycopy(data, 0, sendData, head.length, data.length);
         destinationConnection.sendForwardingData(sendData);
     }
 
@@ -333,10 +337,10 @@ public class Services {
      *
      *    转发   设备--->用户
      * */
-    public void deviceToUserForwarding(DeviceConnection deviceConnection,byte[] head,byte[] data) throws SocketException{
-        byte[] sendData = new byte[head.length+data.length];
-        System.arraycopy(head,0,sendData,0,head.length);
-        System.arraycopy(data,0,sendData,head.length,data.length);
+    public void deviceToUserForwarding(DeviceConnection deviceConnection, byte[] head, byte[] data) throws SocketException {
+        byte[] sendData = new byte[head.length + data.length];
+        System.arraycopy(head, 0, sendData, 0, head.length);
+        System.arraycopy(data, 0, sendData, head.length, data.length);
         ArrayList<UserConnection> destinationConnectionArrayList = onlineDevicesTable.get(deviceConnection).forwardingConnections;
         for (int i = 0; i < destinationConnectionArrayList.size(); i++) {
             destinationConnectionArrayList.get(i).sendForwardingData(sendData);
@@ -346,47 +350,60 @@ public class Services {
     /**
      * 服务器直接向设备发送数据，不管当前是谁操作
      * 【危险操作】谨慎使用
+     *
      * @param deviceID 设备号
-     * @param data 数据
+     * @param data     数据
      * @throws TCPServicesException 异常
      */
-    public void sendDeviceRawData(String deviceID,byte[] data) throws TCPServicesException{
-        if(onlineDevicesTable.size()==0){
+    public void sendDeviceRawData(String deviceID, byte[] data) throws TCPServicesException {
+        if (onlineDevicesTable.size() == 0) {
             throw new TCPServicesException("no such device");
         }
-        DeviceConnection selectedDeviceConnection =null;
-        for (Map.Entry<DeviceConnection,OnlineDeviceInfo> pair:onlineDevicesTable.entrySet()) {
-            if(pair.getValue().deviceID .equals(deviceID)){
+        DeviceConnection selectedDeviceConnection = null;
+        for (Map.Entry<DeviceConnection, OnlineDeviceInfo> pair : onlineDevicesTable.entrySet()) {
+            if (pair.getValue().deviceID.equals(deviceID)) {
                 selectedDeviceConnection = pair.getKey();
                 break;
             }
         }
         try {
             selectedDeviceConnection.sendForwardingData(data);
-        }catch (NullPointerException ne){
+        } catch (NullPointerException ne) {
             throw new TCPServicesException("connection break");
         }
+    }
+
+
+    public void sendDeviceJsonData(String deviceID, String Json) throws TCPServicesException {
+        ByteBuffer buf = ByteBuffer.allocate(Json.length()+5);
+        // 一律按小端序发送
+        buf.order(ByteOrder.LITTLE_ENDIAN);
+        byte type = 'm';
+        buf.put(type);
+        buf.put(Json.getBytes());
+        sendDeviceRawData(deviceID, buf.array());
     }
 
     /**
      * 服务器直接向设备发送控制运动数据，不管当前是谁操作
      * 【危险操作】谨慎使用
+     *
      * @param deviceID 控制设备号
-     * @param offsetX x偏移
-     * @param offsetY y偏移
+     * @param offsetX  x偏移
+     * @param offsetY  y偏移
      * @throws TCPServicesException 异常
      */
-    public void sendDeviceMovementCommand(String deviceID,float offsetX,float offsetY) throws TCPServicesException {
-        ByteBuffer buf =ByteBuffer.allocate(13);
+    public void sendDeviceMovementCommand(String deviceID, float offsetX, float offsetY) throws TCPServicesException {
+        ByteBuffer buf = ByteBuffer.allocate(13);
         // 一律按小端序发送
         buf.order(ByteOrder.LITTLE_ENDIAN);
-        byte type ='c';
+        byte type = 'c';
         buf.put(type);
         buf.putInt(8);
         buf.putFloat(offsetX);
         buf.putFloat(offsetY);
         byte[] sendData = buf.array();
-        sendDeviceRawData(deviceID,sendData);
+        sendDeviceRawData(deviceID, sendData);
     }
 
 }
