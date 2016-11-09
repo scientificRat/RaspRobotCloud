@@ -380,6 +380,7 @@ public class Services {
         buf.order(ByteOrder.LITTLE_ENDIAN);
         byte type = 'm';
         buf.put(type);
+        buf.putInt(Json.length());
         buf.put(Json.getBytes());
         sendDeviceRawData(deviceID, buf.array());
     }
