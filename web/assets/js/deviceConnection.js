@@ -18,7 +18,7 @@ $(document).ready(function () {
     });
 
     $("#right").click(function () {
-        sendMovementCommand(connectionDeviceID, -0.9, 0);
+        sendMovementCommand(connectionDeviceID, 0.9, 0);
     });
 
     var videoPanel = $("#video");
