@@ -32,7 +32,7 @@ public abstract class SelfDefinedProtocolConnection extends TCPConnection {
                 }
                 //读到头部，开始设定超时，每个byte必须在1s内传完
                 this.socket.setSoTimeout(1000);
-                int dataLength = byteToInt(head, 1);
+                int dataLength = byteArrayToInt(head, 1);
                 byte[] data = new byte[dataLength];
                 for (int i = 0; i < dataLength; i++) {
                     int c = inputStream.read();
@@ -66,9 +66,7 @@ public abstract class SelfDefinedProtocolConnection extends TCPConnection {
         byte[] sendData = new byte[5 + strDataBytes.length];
         sendData[0] = 'm';
         intToByteArray(strDataBytes.length, sendData, 1);
-        for (int i = 0; i < strDataBytes.length; i++) {
-            sendData[i + 5] = strDataBytes[i];
-        }
+        System.arraycopy(strDataBytes, 0, sendData, 5, strDataBytes.length);
         sendRawData(sendData);
     }
 

@@ -31,6 +31,21 @@ public class UserVideoHttpConnection extends TCPConnection implements UserConnec
             "Last-Modified: Tue, 20 Sep 2016 12:04:40 GMT \n" +
             "Content-Type: text/html\r\n";
 
+    private void printError(String content) {
+        Date date = new Date();
+        String send = NORMAL_HTTP_HEADER + "Content-Length: " + content.length() + "\r\n" + "Date: " + date.toString() + "\r\n\r\n" + content;
+        try {
+            outputStream.write(send.getBytes());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            this.socket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public String getSessionID() {
         return this.mSessionID;
     }
@@ -134,18 +149,4 @@ public class UserVideoHttpConnection extends TCPConnection implements UserConnec
         }
     }
 
-    public void printError(String content) {
-        Date date = new Date();
-        String send = NORMAL_HTTP_HEADER + "Content-Length: " + content.length() + "\r\n" + "Date: " + date.toString() + "\r\n\r\n" + content;
-        try {
-            outputStream.write(send.getBytes());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        try {
-            this.socket.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 }

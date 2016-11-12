@@ -106,8 +106,6 @@ public class UserNonBrowserClientConnection extends SelfDefinedProtocolConnectio
                             int length = fileInputStream.read(imageData);
                             sendDebugImageData(imageData,length);
 
-                        } catch (FileNotFoundException e) {
-                            e.printStackTrace();
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -199,8 +197,11 @@ public class UserNonBrowserClientConnection extends SelfDefinedProtocolConnectio
 
     @Override
     protected void doBeforeThreadEnd() {
-        if (needCloseAfterParsing) {
-            this.closeConnection();
+        Services services =Services.getInstance();
+        try {
+            services.stopUserForwarding(this);
+        } catch (TCPServicesException e1) {
+            e1.printStackTrace();
         }
     }
 

@@ -303,7 +303,7 @@ $(document).ready(function() {
             error:function () {
                 alert("网络连接不佳")
             }
-        })
+        });
     });
 
 });

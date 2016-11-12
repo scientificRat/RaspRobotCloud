@@ -69,7 +69,7 @@ public abstract class TCPConnection extends Thread {
         buffer[offset + 3] = (byte) ((integer >> 24) & 0xFF);
     }
 
-    protected int byteToInt(byte[] b, int offset) {
+    protected int byteArrayToInt(byte[] b, int offset) {
         //小端序
         int temp;
         int n = 0;
