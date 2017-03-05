@@ -2,37 +2,91 @@
 <html class="baseColorBack colorfulBack">
 <head>
     <meta charset="UTF-8" content="width=device-width,user-scalable=yes"/>
-    <title>观看视频</title>
+    <title>设备连接</title>
+    <link rel="stylesheet" href="assets/css/amazeui.min.css">
     <link rel="stylesheet" href="assets/css/MainStyle.css"/>
+    <style type="text/css" media="screen">
+        #editor {
+            width: 100%;
+            height: 500px;
+            /*border-radius: 5px;*/
+        }
+
+        .good-look-button {
+            margin: 14px 4px;
+            padding: 4px 8px;
+            color: brown;
+            border: solid 1px brown;
+            display: inline-block;
+            border-radius: 3px;
+            background: white;
+            outline: none;
+            cursor: pointer;
+            transition: background 0.5s ease;
+
+        }
+
+        .good-look-button:focus {
+            outline: none;
+        }
+
+        .good-look-button:hover {
+            background: rgba(165, 42, 42, 0.1);
+            outline: none;
+            /*color: white;*/
+        }
+
+        .tab-switch {
+            display: inline-block;
+            margin: 10px;
+        }
+
+        #editorPanel {
+            border-bottom: dashed 1px #f5f5f5;
+        }
+
+
+    </style>
 </head>
 
 <body>
 <div class="container">
     <div class="colorBlock redBack">
         <a class="go_back" href="control.html"><img id="goBack" src="assets/images/back.png"> </a>
-        <p>观看视频</p>
+        <p>设备连接</p>
     </div>
 </div>
 <div class="container">
     <div class="middle-information">
-        <div style="height: 500px">
-            <img id="video" style="display: none" width="560" align="center" src="assets/images/raspberry_pi.png">
+
+        <div id="editorPanel">
+            <div id="editor"></div>
         </div>
-        <div>
-            <a id="up" class="dir_button">前进</a>
-            <a id="down" class="dir_button">后退</a>
-            <a id="left" class="dir_button">左转</a>
-            <a id="right" class="dir_button">右转</a>
-            <br>
-            <br>
-            <a id="detectON" class="dir_button">开启检测</a>
-            <a id="detectOFF" class="dir_button">关闭检测</a>
+        <button id="saveCode" class="good-look-button">保存代码</button>
+        <button id="uploadCode" class="good-look-button">上传代码</button>
+        <button id="watchCompetition" class="good-look-button">观看比赛</button>
+        <div id="videoPanel" style="display: none">
+            <div style="height: 500px">
+                <img id="video" width="560" align="center" src="assets/images/raspberry_pi.png">
+            </div>
+            <div>
+                <a id="up" class="dir_button">前进</a>
+                <a id="down" class="dir_button">后退</a>
+                <a id="left" class="dir_button">左转</a>
+                <a id="right" class="dir_button">右转</a>
+                <br>
+                <br>
+                <a id="detectionON" class="dir_button">开启检测</a>
+                <a id="detectionOFF" class="dir_button">关闭检测</a>
+            </div>
         </div>
+
     </div>
 </div>
-<script src ="assets/js/lib/common.js"></script>
+<script src="assets/js/lib/common.js"></script>
 <script src="assets/js/lib/jquery-3.1.0.min.js"></script>
 <script src="assets/js/lib/jquery.json.js"></script>
+<script src="assets/js/lib/ace/ace.js"></script>
 <script src="assets/js/deviceConnection.js"></script>
 </body>
 

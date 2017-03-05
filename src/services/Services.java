@@ -131,13 +131,13 @@ public class Services {
      */
     public void deviceLogout(DeviceConnection deviceConnection) throws TCPServicesException {
         try {
+            onlineDevicesTable.remove(deviceConnection);
             //如果设备已连用户端接则断开用户连接
             ArrayList<UserConnection> connectionArrayList = onlineDevicesTable.get(deviceConnection).forwardingConnections;
             connectionArrayList.forEach(userConnection -> {
                 userConnection.closeConnection();
                 userConnectionForwardingTable.remove(userConnection);
             });
-            onlineDevicesTable.remove(deviceConnection);
         } catch (NullPointerException e) {
             throw new TCPServicesException("no such device(null pointer)\n" + e.toString());
         }

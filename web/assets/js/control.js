@@ -22,7 +22,7 @@ $(document).ready(function () {
         },
         error: function () {
             alert("session time out");
-            window.location = "index.html";
+            // window.location = "index.html";
         }
     });
 

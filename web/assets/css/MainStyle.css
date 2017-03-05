@@ -10,6 +10,7 @@ body {
 	font-family: "微软雅黑", Helvetica, sans-serif, Arial;
 	font-size: 14px;
 	line-height: 25px;
+	background: inherit !important;
 }
 .baseColorBack {
 	background-color: #313a3d;
@@ -645,9 +646,11 @@ textarea:focus {
 	text-decoration: none;
 	font-size: 1em;
 	border-radius: 2px;
+	outline: none;
 }
 .button:hover {
 	background-color: #71C894;
+	outline: none;
 }
 
 .RightSendButton {
