@@ -58,7 +58,7 @@ public class DeviceControlServlet extends HttpServlet {
             Services services = Services.getInstance();
             try {
                 services.sendDeviceMovementCommand(requestedDeviceID, offsetX, offsetY);
-                out.print(GeneralJsonBuilder.succuss(true));
+                out.print(GeneralJsonBuilder.success(true));
             } catch (TCPServicesException e) {
                 e.printStackTrace();
                 out.print(GeneralJsonBuilder.error(e.toString()));
@@ -73,14 +73,25 @@ public class DeviceControlServlet extends HttpServlet {
             Services services = Services.getInstance();
             try {
                 services.sendDeviceJsonData(requestedDeviceID,commandJson);
-                out.print(GeneralJsonBuilder.succuss(true));
+                out.print(GeneralJsonBuilder.success(true));
             } catch (TCPServicesException e) {
                 e.printStackTrace();
                 out.print(GeneralJsonBuilder.error(e.toString()));
                 return;
             }
 
-        } else {
+        }
+        else if(type.equals("upLoadCode")){
+            String code = req.getParameter("code");
+            if (code == null || code.isEmpty()) {
+                out.print(GeneralJsonBuilder.error("parameter code is required"));
+                return;
+            }
+
+
+            return;
+        }
+        else {
             out.print(GeneralJsonBuilder.error("type not defined"));
             return;
         }

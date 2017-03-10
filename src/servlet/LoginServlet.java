@@ -47,7 +47,7 @@ public class LoginServlet extends HttpServlet {
             req.getSession().removeAttribute("userName");
             req.getSession().removeAttribute("sessionID");
             //返回
-            out.print(GeneralJsonBuilder.succuss(true));
+            out.print(GeneralJsonBuilder.success(true));
             return;
         }
 

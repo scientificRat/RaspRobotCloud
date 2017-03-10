@@ -18,16 +18,18 @@ public class RaspDevicesRepository extends Repository {
 
     public void add(String deviceID,String password) throws SQLException {
         String sql="INSERT INTO devices(device_id, password) VALUES (?,?)";
-        PreparedStatement preparedStatement = dbConnection.prepareStatement(sql);
-        preparedStatement.setString(1,deviceID);
-        preparedStatement.setString(2,password);
-        preparedStatement.execute();
+        try(PreparedStatement preparedStatement = dbConnection.prepareStatement(sql)){
+            preparedStatement.setString(1,deviceID);
+            preparedStatement.setString(2,password);
+            preparedStatement.execute();
+        }
     }
     public void delete(String deviceID) throws SQLException{
         String sql="DELETE FROM devices WHERE device_id=?";
-        PreparedStatement preparedStatement = dbConnection.prepareStatement(sql);
-        preparedStatement.setString(1,deviceID);
-        preparedStatement.execute();
+        try(PreparedStatement preparedStatement = dbConnection.prepareStatement(sql)){
+            preparedStatement.setString(1,deviceID);
+            preparedStatement.execute();
+        }
     }
     public void update(DeviceInfo deviceInfo) throws SQLException{
         String sql;
@@ -40,6 +42,7 @@ public class RaspDevicesRepository extends Repository {
             preparedStatement.setString(1, deviceInfo.getPassword());
             preparedStatement.setString(2, deviceInfo.getDeviceID());
             preparedStatement.execute();
+            preparedStatement.close();
         }
 
         if(deviceInfo.getHardwareDescription()!=null){
@@ -48,6 +51,8 @@ public class RaspDevicesRepository extends Repository {
             preparedStatement.setString(1, deviceInfo.getHardwareDescription());
             preparedStatement.setString(2, deviceInfo.getDeviceID());
             preparedStatement.execute();
+            preparedStatement.close();
+
         }
     }
 
@@ -60,6 +65,7 @@ public class RaspDevicesRepository extends Repository {
         if(resultSet.next()){
             deviceInfo.setHardwareDescription(resultSet.getString("hardware_description"));
         }
+        preparedStatement.close();
         return deviceInfo;
     }
 
@@ -75,21 +81,23 @@ public class RaspDevicesRepository extends Repository {
             deviceInfo.setHardwareDescription(resultSet.getString("hardware_description"));
             deviceInfoArrayList.add(deviceInfo);
         }
+        preparedStatement.close();
         return deviceInfoArrayList;
     }
 
 
     public boolean queryExist(String deviceID,String password) throws SQLException{
         String sql="SELECT count(*) FROM devices WHERE device_id=? AND password=?";
-        PreparedStatement preparedStatement = dbConnection.prepareStatement(sql);
-        preparedStatement.setString(1,deviceID);
-        preparedStatement.setString(2,password);
-        ResultSet resultSet = preparedStatement.executeQuery();
-        if(resultSet.next()){
-            if(resultSet.getInt(1)==1){
-                return true;
+        try(PreparedStatement preparedStatement = dbConnection.prepareStatement(sql)){
+            preparedStatement.setString(1,deviceID);
+            preparedStatement.setString(2,password);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if(resultSet.next()){
+                if(resultSet.getInt(1)==1){
+                    return true;
+                }
             }
+            return false;
         }
-        return false;
     }
 }

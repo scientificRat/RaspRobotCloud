@@ -43,6 +43,10 @@ public class LaunchServlet extends HttpServlet {
                 return;
             }
 
+            /**
+             * userServer是用于建立和用户持久的tcp连接（非http）, 本系统设计的时候本没有http的部分，
+             *  后来以因为客户端开发遇到困难才加入了http的部分，现在系统显得有一点混乱
+             */
             // find the servers in context
             TCPServer deviceServer = (TCPServer) this.getServletContext().getAttribute("DeviceServer");
             TCPServer userServer = (TCPServer) this.getServletContext().getAttribute("UserServer");
@@ -59,7 +63,7 @@ public class LaunchServlet extends HttpServlet {
                 this.getServletContext().setAttribute("DeviceServer", deviceServer);
                 this.getServletContext().setAttribute("UserServer", userServer);
                 this.getServletContext().setAttribute("VideoHttpServer", videoServer);
-                out.print(GeneralJsonBuilder.succuss(true));
+                out.print(GeneralJsonBuilder.success(true));
             } else if (deviceServer != null && userServer != null && videoServer != null) {
                 out.print(GeneralJsonBuilder.error("已经开启，不能再次开启"));
             } else {

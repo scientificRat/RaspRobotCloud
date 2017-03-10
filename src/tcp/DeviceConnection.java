@@ -40,7 +40,7 @@ public class DeviceConnection extends SelfDefinedProtocolConnection {
                     //do login
                     try {
                         Services.getInstance().deviceLogin(loginName,password,this);
-                        sendStringData(GeneralJsonBuilder.succuss(true));
+                        sendStringData(GeneralJsonBuilder.success(true));
                         this.needCloseAfterParsing = false;
                     } catch (TCPServicesException e) {
                         e.printStackTrace();

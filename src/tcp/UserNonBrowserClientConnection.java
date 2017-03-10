@@ -8,9 +8,7 @@ import exceptions.TCPServicesException;
 import services.Services;
 import utility.GeneralJsonBuilder;
 
-import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.SocketException;
 import java.sql.SQLException;
@@ -98,7 +96,7 @@ public class UserNonBrowserClientConnection extends SelfDefinedProtocolConnectio
                     }
                     //debug only:
                     if (deviceID.equals("MJW")) {
-                        sendStringData(GeneralJsonBuilder.succuss(true));
+                        sendStringData(GeneralJsonBuilder.success(true));
                         //发送测试图片
                         try {
                             FileInputStream fileInputStream = new FileInputStream("test.jpg");
@@ -113,7 +111,7 @@ public class UserNonBrowserClientConnection extends SelfDefinedProtocolConnectio
                     }
                     try {
                         services.connectDevice(sessionID, deviceID, this);
-                        sendStringData(GeneralJsonBuilder.succuss(true));
+                        sendStringData(GeneralJsonBuilder.success(true));
                         this.needCloseAfterParsing = false;
                     } catch (TCPServicesException e) {
                         e.printStackTrace();
@@ -144,7 +142,7 @@ public class UserNonBrowserClientConnection extends SelfDefinedProtocolConnectio
                         sendStringData(GeneralJsonBuilder.error("parameter sessionID is required"));
                         return;
                     }
-                    //debug only:
+                    // FIXME:debug only
                     String debug = request.getDebug();
                     if("debug".equals(debug)){
                         ArrayList<DeviceInfo> deviceInfoArrayList = new ArrayList<>();

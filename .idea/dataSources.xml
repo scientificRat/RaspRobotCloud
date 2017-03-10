@@ -7,5 +7,11 @@
       <jdbc-driver>org.postgresql.Driver</jdbc-driver>
       <jdbc-url>jdbc:postgresql://123.206.21.185:5432/rasp_robot_cloud</jdbc-url>
     </data-source>
+    <data-source source="LOCAL" name="rasp_robot_cloud@139.219.199.122" uuid="fdf53a1f-8e60-4d55-990a-fde8e954e429">
+      <driver-ref>postgresql</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>jdbc:postgresql://139.219.199.122:5432/rasp_robot_cloud</jdbc-url>
+    </data-source>
   </component>
 </project>

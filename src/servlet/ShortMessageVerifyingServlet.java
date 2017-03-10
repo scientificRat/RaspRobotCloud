@@ -39,7 +39,7 @@ public class ShortMessageVerifyingServlet extends HttpServlet {
             req.getSession().setAttribute("shortMessageVerifyingCodeInServer", code);
             req.getSession().setAttribute("verified", false);
             ShortMessageSender.sendVerifyingCode(phoneNumber, code);
-            out.print(GeneralJsonBuilder.succuss(true));
+            out.print(GeneralJsonBuilder.success(true));
 
 
         } else if ("verifying".equals(type)) {
@@ -53,7 +53,7 @@ public class ShortMessageVerifyingServlet extends HttpServlet {
             String codeInServer = (String) req.getSession().getAttribute("shortMessageVerifyingCodeInServer");
             if (shortMessageVerifyingCode.equals(codeInServer)) {
                 req.getSession().setAttribute("verified", true);
-                out.print(GeneralJsonBuilder.succuss(true));
+                out.print(GeneralJsonBuilder.success(true));
             }
             else {
                 out.print(GeneralJsonBuilder.error("wrong code"));
@@ -78,7 +78,7 @@ public class ShortMessageVerifyingServlet extends HttpServlet {
             }
             req.getSession().setAttribute("verified", false);
             req.getSession().removeAttribute("shortMessageVerifyingCodeInServer");
-            out.print(GeneralJsonBuilder.succuss(true));
+            out.print(GeneralJsonBuilder.success(true));
         }
         else {
             out.print(GeneralJsonBuilder.error("type not defined"));
