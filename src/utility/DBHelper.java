@@ -10,7 +10,7 @@ import java.sql.SQLException;
  */
 public class DBHelper {
     //default database
-    private static final String databaseUrl="jdbc:postgresql://123.206.21.185:5432/rasp_robot_cloud";
+    private static final String databaseUrl="jdbc:postgresql://139.219.199.122:5432/rasp_robot_cloud";
     private static final String databaseUserName="postgres";
     private static final String databaseUserPassword="199606128";
 
