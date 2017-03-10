@@ -1,101 +1,97 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dataSource name="PostgreSQL - rasp_robot_cloud@123.206.21.185">
-  <database-model serializer="dbm" rdbms="POSTGRES" format-version="2.6">
-    <database id="1" name="rasp_robot_cloud">
-      <object-id>16384</object-id>
-      <visible>1</visible>
+  <database-model serializer="dbm" rdbms="POSTGRES" format-version="4.0">
+    <root id="1"/>
+    <database id="2" parent="1" name="rasp_robot_cloud">
+      <ObjectId>16384</ObjectId>
+      <Current>1</Current>
+      <Visible>1</Visible>
     </database>
-    <database id="2" name="postgres">
-      <object-id>12923</object-id>
-    </database>
-    <schema id="3" parent="1" name="public">
-      <object-id>2200</object-id>
-      <visible>1</visible>
-      <introspection-state-number>1902</introspection-state-number>
-      <introspection-timestamp>2016-09-30.17:59:00.009</introspection-timestamp>
+    <schema id="3" parent="2" name="public">
+      <ObjectId>2200</ObjectId>
+      <IntrospectionTimestamp>2016-09-30.17:59:00.009</IntrospectionTimestamp>
+      <IntrospectionStateNumber>1902</IntrospectionStateNumber>
+      <Current>1</Current>
+      <Visible>1</Visible>
     </schema>
-    <schema id="4" parent="1" name="pg_catalog">
-      <object-id>11</object-id>
+    <schema id="4" parent="2" name="pg_catalog">
+      <ObjectId>11</ObjectId>
     </schema>
-    <schema id="5" parent="1" name="pg_toast">
-      <object-id>99</object-id>
+    <schema id="5" parent="2" name="pg_toast">
+      <ObjectId>99</ObjectId>
     </schema>
-    <schema id="6" parent="1" name="pg_temp_1">
-      <object-id>11194</object-id>
+    <schema id="6" parent="2" name="pg_temp_1">
+      <ObjectId>11194</ObjectId>
     </schema>
-    <schema id="7" parent="1" name="pg_toast_temp_1">
-      <object-id>11195</object-id>
+    <schema id="7" parent="2" name="pg_toast_temp_1">
+      <ObjectId>11195</ObjectId>
     </schema>
-    <schema id="8" parent="1" name="information_schema">
-      <object-id>12380</object-id>
+    <schema id="8" parent="2" name="information_schema">
+      <ObjectId>12380</ObjectId>
     </schema>
     <table id="9" parent="3" name="devices">
-      <object-id>16424</object-id>
-      <state-number>1902</state-number>
+      <ObjectId>16424</ObjectId>
+      <StateNumber>1902</StateNumber>
     </table>
     <table id="10" parent="3" name="users">
-      <object-id>16419</object-id>
-      <state-number>1901</state-number>
+      <ObjectId>16419</ObjectId>
+      <StateNumber>1901</StateNumber>
     </table>
     <column id="11" parent="9" name="device_id">
-      <state-number>1902</state-number>
-      <mandatory>1</mandatory>
-      <data-type>varchar(35)|0</data-type>
+      <DataType>varchar(35)|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>1902</StateNumber>
     </column>
     <column id="12" parent="9" name="password">
-      <state-number>1898</state-number>
-      <mandatory>1</mandatory>
-      <data-type>varchar(32)|0</data-type>
+      <DataType>varchar(32)|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>1898</StateNumber>
     </column>
     <column id="13" parent="9" name="hardware_description">
-      <state-number>1898</state-number>
-      <data-type>text|0</data-type>
+      <DataType>text|0</DataType>
+      <StateNumber>1898</StateNumber>
     </column>
     <index id="14" parent="9" name="devices_pkey">
-      <object-id>16430</object-id>
-      <columns>device_id</columns>
-      <desc-columns></desc-columns>
-      <unique>1</unique>
+      <ObjectId>16430</ObjectId>
+      <ColNames>device_id</ColNames>
+      <Unique>1</Unique>
     </index>
     <index id="15" parent="9" name="devices_pkey">
-      <object-id>16438</object-id>
-      <columns>device_id</columns>
-      <desc-columns></desc-columns>
-      <unique>1</unique>
+      <ObjectId>16438</ObjectId>
+      <ColNames>device_id</ColNames>
+      <Unique>1</Unique>
     </index>
     <key id="16" parent="9" name="devices_pkey">
-      <object-id>16439</object-id>
-      <columns>device_id</columns>
-      <underlying-index>devices_pkey</underlying-index>
-      <primary>1</primary>
+      <ObjectId>16439</ObjectId>
+      <ColNames>device_id</ColNames>
+      <UnderlyingIndexName>devices_pkey</UnderlyingIndexName>
+      <Primary>1</Primary>
     </key>
     <column id="17" parent="10" name="user_name">
-      <state-number>1901</state-number>
-      <mandatory>1</mandatory>
-      <data-type>varchar(32)|0</data-type>
+      <DataType>varchar(32)|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>1901</StateNumber>
     </column>
     <column id="18" parent="10" name="password">
-      <state-number>1898</state-number>
-      <mandatory>1</mandatory>
-      <data-type>varchar(32)|0</data-type>
+      <DataType>varchar(32)|0</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>1898</StateNumber>
     </column>
     <index id="19" parent="10" name="users_pkey">
-      <object-id>16422</object-id>
-      <columns>user_name</columns>
-      <desc-columns></desc-columns>
-      <unique>1</unique>
+      <ObjectId>16422</ObjectId>
+      <ColNames>user_name</ColNames>
+      <Unique>1</Unique>
     </index>
     <index id="20" parent="10" name="users_pkey">
-      <object-id>16432</object-id>
-      <columns>user_name</columns>
-      <desc-columns></desc-columns>
-      <unique>1</unique>
+      <ObjectId>16432</ObjectId>
+      <ColNames>user_name</ColNames>
+      <Unique>1</Unique>
     </index>
     <key id="21" parent="10" name="users_pkey">
-      <object-id>16433</object-id>
-      <columns>user_name</columns>
-      <underlying-index>users_pkey</underlying-index>
-      <primary>1</primary>
+      <ObjectId>16433</ObjectId>
+      <ColNames>user_name</ColNames>
+      <UnderlyingIndexName>users_pkey</UnderlyingIndexName>
+      <Primary>1</Primary>
     </key>
   </database-model>
 </dataSource>
